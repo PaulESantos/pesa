@@ -1,4 +1,6 @@
 #' Count all missing values in a tibble
+#' @description
+#' `r lifecycle::badge("maturing")`
 #'
 #' @param df A tibble or data.frame.
 #'

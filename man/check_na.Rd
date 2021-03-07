@@ -13,5 +13,5 @@ check_na(df)
 A tibble displaying the number of missing values in the dataframe.
 }
 \description{
-Count all missing values in a tibble
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#maturing}{\figure{lifecycle-maturing.svg}{options: alt='[Maturing]'}}}{\strong{[Maturing]}}
 }
