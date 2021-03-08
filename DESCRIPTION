@@ -22,6 +22,8 @@ Imports:
     lifecycle,
     stringr,
     purrr,
-    tibble
+    tibble,
+    readxl,
+    crayon
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues

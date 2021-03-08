@@ -1,1 +1,1 @@
-utils::globalVariables(c(".", "%>%", "amount_na"))
+utils::globalVariables(c(".", "%>%", "amount_na", "%+%"))
