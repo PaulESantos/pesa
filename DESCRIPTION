@@ -24,6 +24,9 @@ Imports:
     purrr,
     tibble,
     readxl,
-    crayon
+    crayon,
+    TNRS,
+    tidyr,
+    magrittr
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
