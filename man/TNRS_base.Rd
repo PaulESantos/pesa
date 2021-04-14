@@ -32,3 +32,4 @@ Resolve a small batch of plant taxonomic names
 \note{
 This function is primarily used as an internal function of TNRS and can only handle relatively small batches of names.
 }
+\keyword{Internal}

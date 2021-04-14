@@ -10,7 +10,7 @@
 #' @note This function is primarily used as an internal function of TNRS and can only handle relatively small batches of names.
 #' @importFrom httr POST
 #' @importFrom jsonlite toJSON fromJSON
-#' @export
+#' @keywords Internal
 TNRS_base <- function(taxonomic_names,
                        sources = "tpl,tropicos,usda",
                        classification = "tropicos",
@@ -50,9 +50,9 @@ TNRS_base <- function(taxonomic_names,
                        data_json, '}' )
 
   # Construct the request
-  headers <- list('Accept' = 'application/json',
-                  'Content-Type' = 'application/json',
-                  'charset' = 'UTF-8')
+  #headers <- list('Accept' = 'application/json',
+  #                'Content-Type' = 'application/json',
+  #                'charset' = 'UTF-8')
 
   # Send the API request
   #results_json <- postForm(url,

@@ -39,7 +39,7 @@ TNRS <- function(taxonomic_names,
   # If there are less than the max number of names allowable, send them to the base package
   if(nrow(taxonomic_names)<=name_limit){
 
-    return(pesa::TNRS_base(taxonomic_names = taxonomic_names, sources = sources, classification = classification, mode = mode, matches = matches ))
+    return(TNRS_base(taxonomic_names = taxonomic_names, sources = sources, classification = classification, mode = mode, matches = matches ))
 
   }#
 
@@ -56,7 +56,7 @@ TNRS <- function(taxonomic_names,
 
       #Use the first batch of results to set up the output file
       if(i==1){
-        results <- pesa::TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(i*name_limit),],
+        results <- TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(i*name_limit),],
                               sources = sources,
                               classification = classification,
                               mode = mode,
@@ -77,7 +77,7 @@ TNRS <- function(taxonomic_names,
 
 
         results <- rbind(results,
-                         pesa::TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(nrow(taxonomic_names)),],
+                         TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(nrow(taxonomic_names)),],
                                     sources = sources,
                                     classification = classification,
                                     mode = mode,
@@ -94,7 +94,7 @@ TNRS <- function(taxonomic_names,
       #middle bits
       if(i != nchunks & i != 1){
         results <- rbind(results,
-                         pesa::TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(i*name_limit),],
+                         TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(i*name_limit),],
                                     sources = sources,
                                     classification = classification,
                                     mode = mode,

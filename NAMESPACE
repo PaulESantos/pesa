@@ -2,7 +2,6 @@
 
 export("%>%")
 export(TNRS)
-export(TNRS_base)
 export(check_na)
 export(read_plus)
 export(str_delete_after)
