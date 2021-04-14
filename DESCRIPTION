@@ -27,6 +27,8 @@ Imports:
     crayon,
     TNRS,
     tidyr,
-    magrittr
+    magrittr,
+    httr,
+    jsonlite
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
