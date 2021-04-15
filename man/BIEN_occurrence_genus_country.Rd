@@ -51,4 +51,8 @@ genus/genera  and country from the BIEN database.
 \note{
 US FIA coordinates have been fuzzed and swapped, for more details see: https://www.fia.fs.fed.us/tools-data/spatial/Policy/index.php
 }
+\examples{
+\dontrun{
+BIEN_occurrence_genus_country("Vaccinium", "Peru")}
+}
 \concept{occurrence functions}
