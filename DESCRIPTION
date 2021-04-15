@@ -29,6 +29,8 @@ Imports:
     tidyr,
     magrittr,
     httr,
-    jsonlite
+    jsonlite,
+    DBI,
+    RPostgreSQL
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
