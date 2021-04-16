@@ -105,10 +105,7 @@ BIEN_occurrence_genus_country <-function(genus,
 #' @note US FIA coordinates have been fuzzed and swapped, for more details see: https://www.fia.fs.fed.us/tools-data/spatial/Policy/index.php
 #' @return Dataframe containing occurrence records for the specified species.
 #' @examples \dontrun{
-#' BIEN_occurrence_species("Abies amabilis")
-#' species_vector<-c("Abies amabilis", "Acer nigrum")
-#' BIEN_occurrence_species(species_vector)
-#' BIEN_occurrence_species(species_vector,all.taxonomy=TRUE)}
+#' BIEN_occurrence_species_range("Vaccinium floribundum", 3000, 3300)}
 #' @family occurrence functions
 #' @export
 BIEN_occurrence_species_range<-function(species,
