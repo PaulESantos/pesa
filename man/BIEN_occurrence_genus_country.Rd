@@ -57,6 +57,7 @@ BIEN_occurrence_genus_country("Vaccinium", "Peru")}
 }
 \seealso{
 Other occurrence functions: 
-\code{\link{BIEN_occurrence_species_range}()}
+\code{\link{BIEN_occurrence_species_range}()},
+\code{\link{BIEN_occurrence_state_range}()}
 }
 \concept{occurrence functions}

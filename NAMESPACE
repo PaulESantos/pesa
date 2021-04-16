@@ -3,6 +3,7 @@
 export("%>%")
 export(BIEN_occurrence_genus_country)
 export(BIEN_occurrence_species_range)
+export(BIEN_occurrence_state_range)
 export(TNRS)
 export(check_na)
 export(read_plus)
