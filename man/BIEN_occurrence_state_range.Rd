@@ -2,7 +2,9 @@
 % Please edit documentation in R/BIEN.R
 \name{BIEN_occurrence_state_range}
 \alias{BIEN_occurrence_state_range}
-\title{Extract species occurrence records by state.}
+\title{Extract species occurrence records by state and elevation range
+BIEN_occurrence_state_range extracts occurrences records for the specified state(s).
+Extract species occurrence records by state.}
 \usage{
 BIEN_occurrence_state_range(
   country = NULL,
@@ -68,9 +70,7 @@ This function requires you supply either 1) a single country with one or more st
 }
 \examples{
 \dontrun{
-BIEN_occurrence_state("United States","Rhode Island")
-state_vector<-c("Rhode Island","Maryland")
-BIEN_occurrence_state(country="United States",state=state_vector)}
+BIEN_occurrence_state_range("Peru", "Cusco", 3000, 3300)}
 }
 \seealso{
 Other occurrence functions: 
