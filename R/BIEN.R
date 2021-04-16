@@ -214,9 +214,15 @@ BIEN_list_species_range<-function(country, elevation_min, elevation_max, ...){
 #####################################################################
 #######################
 
+<<<<<<< HEAD
 #'Extract species occurrence records by state and elevation range.
 #'
 #'BIEN_occurrence_state_range extracts occurrences records for the specified state(s).
+=======
+#'Extract species occurrence records by state.
+#'
+#'BIEN_occurrence_state extracts occurrences records for the specified state(s).
+>>>>>>> 0e77a5b0a476c52e3112777e03fcce4dddf55436
 #' @param state A state or vector of states (or other primary political divisions, e.g. provinces).
 #' @param country A single country or vector of countries.
 #' @param state.code A single state/province code, or a vector of states/province codes.
@@ -237,7 +243,13 @@ BIEN_list_species_range<-function(country, elevation_min, elevation_max, ...){
 #' @note This function requires you supply either 1) a single country with one or more states, or 2) vectors of equal length for each political level.
 #' @return Dataframe containing occurrence records for the specified states/provinces.
 #' @examples \dontrun{
+<<<<<<< HEAD
 #' BIEN_occurrence_state_range("Peru", "Cusco", 3000, 3300)}
+=======
+#' BIEN_occurrence_state("United States","Rhode Island")
+#' state_vector<-c("Rhode Island","Maryland")
+#' BIEN_occurrence_state(country="United States",state=state_vector)}
+>>>>>>> 0e77a5b0a476c52e3112777e03fcce4dddf55436
 #' @family occurrence functions
 #' @export
 BIEN_occurrence_state_range<-function(country=NULL,
