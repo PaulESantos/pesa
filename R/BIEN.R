@@ -380,3 +380,122 @@ BIEN_metadata_list_political_names<-function(...){
   .BIEN_sql(query, ...)
 
 }
+######################################################################
+# 04-22-2021  nueva fucnion
+BIEN_list_county_paul <-function(country=NULL,state=NULL,county=NULL,country.code=NULL,state.code=NULL,county.code=NULL,cultivated=FALSE,new.world=NULL, ...){
+  .is_char(country.code)
+  .is_char(state.code)
+  .is_char(county.code)
+  .is_char(country)
+  .is_char(state)
+  .is_char(county)
+  .is_log(cultivated)
+  .is_log_or_null(new.world)
+
+  # set base query components
+  sql_select <-  paste("SELECT DISTINCT country, state_province, county, family, scrubbed_species_binomial ")
+  sql_from <- paste(" FROM species_by_political_division ")
+
+  if(is.null(country.code) & is.null(state.code) & is.null(county.code)){
+
+    #sql where
+    if(length(country)==1 & length(state)==1){
+      sql_where <- paste(" WHERE country in (", paste(shQuote(country, type = "sh"),collapse = ', '), ")
+                         AND state_province in (", paste(shQuote(state, type = "sh"),collapse = ', '), ")
+                         AND county in (", paste(shQuote(county, type = "sh"),collapse = ', '), ")
+                         AND scrubbed_species_binomial IS NOT NULL")
+    }else{
+
+      if(length(country)==length(state) & length(country)==length(county)){
+
+        sql_where<-"WHERE ("
+
+        for(i in 1:length(country)){
+
+          condition_i<- paste("(country = ", paste(shQuote(country[i], type = "sh"),collapse = ', '), "
+                              AND state_province = ", paste(shQuote(state[i], type = "sh"),collapse = ', '), "
+                              AND county = ", paste(shQuote(county[i], type = "sh"),collapse = ', '), ")
+                              ")
+
+          if(i!=1){condition_i<- paste("OR ",condition_i)}#stick OR onto the condition where needed
+          sql_where<-paste(sql_where,condition_i)
+
+        }#for i
+
+        sql_where<-paste(sql_where,") AND scrubbed_species_binomial IS NOT NULL")
+
+      }else{
+        stop("If supplying more than one country and/or state the function requires matching vectors of countries, states and counties.")
+
+      }
+
+
+
+    }#if length(country>1)
+  }else{
+
+    #sql where
+    if(length(country.code)==1 & length(state.code)==1){
+      sql_where <- paste(" WHERE country in (SELECT country FROM country WHERE iso in (", paste(shQuote(country.code, type = "sh"),collapse = ', '), "))
+                         AND state_province in (SELECT state_province_ascii FROM county_parish WHERE admin1code in (", paste(shQuote(state.code, type = "sh"),collapse = ', '), "))
+                         AND county in (SELECT county_parish_ascii FROM county_parish WHERE admin2code in (", paste(shQuote(county.code, type = "sh"),collapse = ', '), "))
+                         AND scrubbed_species_binomial IS NOT NULL")
+    }else{
+
+      if(length(country)==length(state) & length(country)==length(county)){
+
+        sql_where<-"WHERE ("
+
+        for(i in 1:length(country)){
+
+          condition_i<- paste("(country = (SELECT country FROM country WHERE iso in (", paste(shQuote(country.code, type = "sh"),collapse = ', '), "))
+                              AND state_province = (SELECT state_province_ascii FROM county_parish WHERE admin1code in (", paste(shQuote(state.code, type = "sh"),collapse = ', '), "))
+                              AND county = (SELECT county_parish_ascii FROM county_parish WHERE admin2code in (", paste(shQuote(county.code, type = "sh"),collapse = ', '), "))" )
+
+          if(i!=1){condition_i<- paste("OR ",condition_i)}#stick OR onto the condition where needed
+          sql_where<-paste(sql_where,condition_i)
+
+        }#for i
+
+        sql_where<-paste(sql_where,") AND scrubbed_species_binomial IS NOT NULL")
+
+      }else{
+        stop("If supplying more than one country and/or state the function requires matching vectors of countries, states and counties.")
+
+      }
+
+
+
+    }#if length(country>1)
+
+
+  }
+
+
+  sql_order_by <- paste(" ORDER BY scrubbed_species_binomial ")
+
+  # adjust for optional parameters
+  if(!cultivated){
+    sql_where <- paste(sql_where, " AND (is_cultivated_observation = 0 OR is_cultivated_observation IS NULL) ")
+  }else{
+    sql_select  <- paste(sql_select, ",is_cultivated_observation,is_cultivated_in_region")
+  }
+
+  #if(!new.world){
+  #  sql_select <- paste(sql_select,",is_new_world")
+  #}else{
+  #  sql_where <- paste(sql_where, "AND is_new_world = 1 ")
+  #}
+
+  newworld_<-.newworld_check(new.world)
+
+  # form the final query
+  query <- paste(sql_select,newworld_$select, sql_from, sql_where,newworld_$query, sql_order_by, " ;")
+
+
+  ## form the final query
+  #query <- paste(sql_select, sql_from, sql_where, sql_order_by, " ;")
+
+  return(.BIEN_sql(query, ...))
+
+}

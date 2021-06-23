@@ -31,6 +31,7 @@ Imports:
     httr,
     jsonlite,
     DBI,
-    RPostgreSQL
+    RPostgreSQL,
+    rredlist
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
