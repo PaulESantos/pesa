@@ -1,6 +1,6 @@
 Package: pesa
 Title: Personal R pacakge
-Version: 0.0.0.1
+Version: 0.0.1.1
 Authors@R: 
     person(given = "Paul Efren",
            family = "Santos Andrade",
@@ -32,6 +32,7 @@ Imports:
     jsonlite,
     DBI,
     RPostgreSQL,
-    rredlist
+    rredlist,
+    rstudioapi
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
