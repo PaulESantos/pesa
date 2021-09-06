@@ -12,7 +12,7 @@ gitcommit(msg = "commit from Rstudio", dir = getwd())
 \item{dir}{directory name}
 }
 \value{
-
+a list of commited files
 }
 \description{
 Git Commit

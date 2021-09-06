@@ -33,6 +33,7 @@ Imports:
     DBI,
     RPostgreSQL,
     rredlist,
-    rstudioapi
+    rstudioapi,
+    rleafarea
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
