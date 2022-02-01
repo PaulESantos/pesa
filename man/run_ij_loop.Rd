@@ -13,7 +13,8 @@ run_ij_loop(path, new_path, output, ...)
 
 \item{output}{Set output directory that contains tiff images.}
 
-\item{...}{}
+\item{...}{Additional arguments for the function. Using these
+\code{...} is strongly discouraged because of issues of timing of evaluation.}
 }
 \value{
 A tibble.

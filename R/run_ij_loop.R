@@ -3,8 +3,8 @@
 #' @param path Set directory that contains leaf images.
 #' @param new_path Set temp directory that contains leaf images.
 #' @param output Set output directory that contains tiff images.
-#' @param ...
-#'
+#' @param ... Additional arguments for the function. Using these
+#'   `...` is strongly discouraged because of issues of timing of evaluation.
 #' @return A tibble.
 #' @export
 #'
