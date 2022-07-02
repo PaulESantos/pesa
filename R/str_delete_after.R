@@ -9,7 +9,6 @@
 #' @return The part of the string before the pattern.
 #' @export
 #'
-
 str_delete_after <- function(string, pattern, pos = 1){
 
   pos_pattern <- stringr::str_locate_all(string = string,

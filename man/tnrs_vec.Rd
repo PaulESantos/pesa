@@ -15,7 +15,3 @@ a tibble
 \description{
 TNRS vectorized
 }
-\examples{
-x <- c("Plantago tubuloso", "Plantago tubulosa")
-tnrs_vec(x)
-}

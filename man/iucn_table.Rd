@@ -17,6 +17,3 @@ Tibble
 \description{
 IUCN red list
 }
-\examples{
-#iucn_table("Schinus molle")
-}

@@ -42,7 +42,7 @@
 
   # If taxonomic names are supplied as a character string, make them into a data.frame
 
-  if(class(taxonomic_names)=="character"){
+  if(inherits(taxonomic_names, what = "character")){
     taxonomic_names <- data.frame(ID = 1:length(taxonomic_names), taxonomic_names)
   }
 

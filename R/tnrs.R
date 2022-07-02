@@ -10,16 +10,6 @@
 #' @return Dataframe containing TNRS results.
 #' @note usda = United States Department of Agriculture, wfo = World Flora Online, wcvp = World Checklist of Vascular Plants.
 #' @export
-#' @examples {
-#' #Take a subset of the testfile to speed up runtime
-#' tnrs_testfile <- tnrs_testfile[1:20,]
-#'
-#' results <- TNRS(taxonomic_names = tnrs_testfile)
-#'
-#' # Inspect the results
-#' head(results, 10)
-#' }
-#'
 TNRS <- function(taxonomic_names,
                  sources = c("tropicos","wcvp"),
                  classification = "tropicos",
@@ -36,7 +26,7 @@ TNRS <- function(taxonomic_names,
 
   #If taxonomic names are supplied as a character string, make them into a data.frame
 
-  if(class(taxonomic_names) == "character"){
+  if(inherits(taxonomic_names, what = "character")){
     taxonomic_names <- as.data.frame(cbind(1:length(taxonomic_names),taxonomic_names))
   }
 

@@ -6,8 +6,6 @@
 #' @return a tibble
 #' @export
 #'
-#' @examples
-#' #df %>% tnrs(specie)
 tnrs_tbl <- function(df, specie){
   if(unique(class(df) %in% c("tbl_df", "tbl", "data.frame")) == TRUE){
 

@@ -17,6 +17,3 @@ a tibble
 \description{
 tnrs
 }
-\examples{
-#df \%>\% tnrs(specie)
-}

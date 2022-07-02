@@ -4,10 +4,6 @@
 #'
 #' @return a tibble
 #' @export
-#'
-#' @examples
-#' x <- c("Plantago tubuloso", "Plantago tubulosa")
-#' tnrs_vec(x)
 tnrs_vec <- function(x) {
   tnrs <- pesa::TNRS(x)
   dplyr::tibble(Name_submitted = x) %>%

@@ -6,8 +6,6 @@
 #' @return Tibble
 #' @export
 #'
-#' @examples
-#' #iucn_table("Schinus molle")
 iucn_table <- function(x, key = NULL){
   if(is.null(key) == TRUE){
     iucn_key <- Sys.getenv("IUCN_KEY")

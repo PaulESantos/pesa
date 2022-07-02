@@ -35,15 +35,3 @@ Resolve plant taxonomic names.
 \note{
 usda = United States Department of Agriculture, wfo = World Flora Online, wcvp = World Checklist of Vascular Plants.
 }
-\examples{
-{
-#Take a subset of the testfile to speed up runtime
-tnrs_testfile <- tnrs_testfile[1:20,]
-
-results <- TNRS(taxonomic_names = tnrs_testfile)
-
-# Inspect the results
-head(results, 10)
-}
-
-}
