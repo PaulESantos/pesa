@@ -21,5 +21,5 @@ You can install the released version of `pesa` from
 [GitHub](https://github.com/) with:
 
 ``` r
-remotes::install_github("PaulESantos/pesa")
+pak::pkg_install("PaulESantos/pesa")
 ```
