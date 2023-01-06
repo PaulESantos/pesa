@@ -1,3 +1,13 @@
+.onAttach <- function(lib, pkg) {
+  packageStartupMessage("This is pesa ",
+                        utils::packageDescription("pesa",
+                                                  fields = "Version"
+                        ),
+                        appendLF = TRUE
+  )
+}
+
+
 #Internal functions
 
 ######################
