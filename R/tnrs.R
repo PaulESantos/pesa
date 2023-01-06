@@ -11,7 +11,7 @@
 #' @note usda = United States Department of Agriculture, wfo = World Flora Online, wcvp = World Checklist of Vascular Plants.
 #' @export
 TNRS <- function(taxonomic_names,
-                 sources = c("tropicos","wcvp"),
+                 sources = c("tropicos","wcvp", "usda", "wfo"),
                  classification = "tropicos",
                  mode = "resolve",
                  matches = "best",
@@ -73,7 +73,7 @@ TNRS <- function(taxonomic_names,
   # If there are less than the max number of names allowable, send them to the base package
   if(nrow(taxonomic_names) <= name_limit){
 
-    return(.TNRS_base(taxonomic_names = taxonomic_names,
+    return(.TNRS_base_p(taxonomic_names = taxonomic_names,
                       sources = sources,
                       classification = classification,
                       mode = mode,
@@ -95,7 +95,7 @@ TNRS <- function(taxonomic_names,
 
       #Use the first batch of results to set up the output file
       if(i==1){
-        results <- .TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(i*name_limit),],
+        results <- .TNRS_base_p(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(i*name_limit),],
                               sources = sources,
                               classification = classification,
                               mode = mode,
@@ -117,7 +117,7 @@ TNRS <- function(taxonomic_names,
 
 
         results <- rbind(results,
-                         .TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(nrow(taxonomic_names)),],
+                         .TNRS_base_p(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(nrow(taxonomic_names)),],
                                     sources = sources,
                                     classification = classification,
                                     mode = mode,
@@ -135,7 +135,7 @@ TNRS <- function(taxonomic_names,
       #middle bits
       if(i != nchunks & i != 1){
         results <- rbind(results,
-                         .TNRS_base(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(i*name_limit),],
+                         .TNRS_base_p(taxonomic_names = taxonomic_names[(((i-1)*name_limit)+1):(i*name_limit),],
                                     sources = sources,
                                     classification = classification,
                                     mode = mode,

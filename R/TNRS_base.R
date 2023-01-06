@@ -14,8 +14,8 @@
 #' @importFrom jsonlite toJSON fromJSON
 #' @keywords Internal
 #'
-.TNRS_base <- function(taxonomic_names,
-                       sources = c("tropicos","wcvp"),
+.TNRS_base_p <- function(taxonomic_names,
+                       sources = c("tropicos","wcvp", "usda", "wfo"),
                        classification = "tropicos",
                        mode = "resolve",
                        matches = "best",

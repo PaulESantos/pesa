@@ -1,2 +1,2 @@
-utils::globalVariables(c(".", "%>%", "amount_na", "%+%", "id", "data",
+utils::globalVariables(c(".", "amount_na", "%+%", "id", "data",
                          ".TNRS_base", "tnrs", "lcvp"))

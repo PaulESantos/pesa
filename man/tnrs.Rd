@@ -6,7 +6,7 @@
 \usage{
 TNRS(
   taxonomic_names,
-  sources = c("tropicos", "wcvp"),
+  sources = c("tropicos", "wcvp", "usda", "wfo"),
   classification = "tropicos",
   mode = "resolve",
   matches = "best",

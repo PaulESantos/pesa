@@ -13,12 +13,12 @@
 #'
 read_plus <- function(files_path, format = "csv", ...){
   read_txt_csv <- function(flnm) {
-    data.table::fread(flnm, ...) %>%
+    data.table::fread(flnm, ...) |>
       dplyr::mutate(filename = flnm)
   }
 
   read_excels <- function(flnm) {
-    readxl::read_excel(flnm, ...) %>%
+    readxl::read_excel(flnm, ...) |>
       dplyr::mutate(filename = flnm)
   }
   if (format %in% c("xlsx", "xls")){
@@ -31,7 +31,7 @@ read_plus <- function(files_path, format = "csv", ...){
       #              format, "files were found"))
     }
     else{
-      files %>%
+      files |>
         purrr::map_df(~read_excels(.))
     }
 
@@ -46,7 +46,7 @@ read_plus <- function(files_path, format = "csv", ...){
       #               format, " files were found"))
     }
     else{
-      files %>%
+      files |>
         purrr::map_df(~read_txt_csv(.))
     }
   }
