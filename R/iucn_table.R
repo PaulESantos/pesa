@@ -8,7 +8,7 @@
 #'
 iucn_table <- function(x, key = NULL){
   if(is.null(key) == TRUE){
-    iucn_key <- Sys.getenv("IUCN_KEY")
+    iucn_key <- Sys.getenv("IUCN_REDLIST_KEY")
   }
   else{
     iucn_key <- key
