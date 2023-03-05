@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# pesa
+# pesa <a href='https://github.com/PaulESantos/ttmoment'><img src='man/figures/pesa_logo.svg' align="right" height="250" width="220" /></a>
 
 <!-- badges: start -->
 

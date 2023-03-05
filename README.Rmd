@@ -13,7 +13,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-# pesa
+# pesa <a href='https://github.com/PaulESantos/ttmoment'><img src='man/figures/pesa_logo.svg' align="right" height="250" width="220" /></a>
+
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
