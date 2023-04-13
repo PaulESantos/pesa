@@ -6,3 +6,4 @@
 ^\.github$
 .man-roxigen
 ^deprecated.
+tropicos api.R
