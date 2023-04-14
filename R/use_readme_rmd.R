@@ -3,12 +3,23 @@
 #' This function creates a new folder if it does not exist and creates a README.Rmd file with default content in the specified path.
 #'
 #' @param path A character string specifying the path where the README.Rmd file will be created.
+#' @param open interactive
 #' @return None
 #'
+#'
 #' @examples
-#' #create_readme_rmd("~/my_project")
+#' #use_readme_rmd("~/my_project")
 #' @export
-create_readme_rmd <- function(path) {
+use_readme_rmd <- function(path, open = rlang::is_interactive()) {
+  edit_file <- function(path, open = rlang::is_interactive()) {
+    open <- open && rlang::is_interactive()
+    if (rstudioapi::isAvailable() && rstudioapi::hasFun("navigateToFile")) {
+      rstudioapi::navigateToFile(path)
+    } else {
+      utils::file.edit(path)
+    }
+    invisible(path)
+  }
   # crea una nueva carpeta si no existe
   if (!file.exists(path)) {
     dir.create(path)
@@ -62,11 +73,11 @@ create_readme_rmd <- function(path) {
     message("Archivo README.Rmd creado en ", path)
 
     # abre automáticamente el archivo README.Rmd
-    utils::file.edit(readme_path)
+    edit_file(readme_path)
   } else {
     message("El archivo README.Rmd ya existe en ", path)
 
     # abre automáticamente el archivo README.Rmd
-    utils::file.edit(readme_path)
+    edit_file(readme_path)
   }
 }

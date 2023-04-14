@@ -28,6 +28,8 @@ Imports:
     jsonlite,
     DBI,
     RPostgreSQL,
-    rredlist
+    rredlist,
+    rlang,
+    rstudioapi
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
