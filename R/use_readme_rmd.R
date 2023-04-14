@@ -7,6 +7,7 @@
 #'
 #' @examples
 #' #create_readme_rmd("~/my_project")
+#' @export
 create_readme_rmd <- function(path) {
   # crea una nueva carpeta si no existe
   if (!file.exists(path)) {
