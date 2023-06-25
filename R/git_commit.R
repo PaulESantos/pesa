@@ -1,13 +1,35 @@
-#' Git Commit
+#' Realiza un commit con todos los cambios en un repositorio Git
 #'
-#' @param msg message
-#' @param dir directory name
+#' Esta función verifica si el directorio actual es un repositorio Git y realiza un commit con todos los cambios,
+#' incluyendo modificaciones, eliminaciones y creaciones de archivos.
 #'
-#' @return a list of commited files
+#' @param commit_message El mensaje descriptivo para el commit.
+#'
+#' @return No devuelve ningún valor. Muestra un mensaje indicando que el commit se realizó con éxito.
+#'
+#' @examples
+#' \dontrun{
+#' # Realizar un commit con todos los cambios
+#' commit_all_changes("Mensaje del commit")
+#' }
+#'
+#' @importFrom base system
+#' @importFrom utils message
+#' @importFrom utils paste
+#' @importFrom utils shQuote
+#'
 #' @export
-#'
-gitcommit <- function(msg = "commit from Rstudio",
-                      dir = getwd()){
-  cmd = sprintf("git commit -m\"%s\"",msg)
-  system(cmd)
+commit_all_changes <- function(commit_message) {
+  # Verificar si el directorio actual es un repositorio Git
+  if (!system("git rev-parse --is-inside-work-tree", intern = TRUE) == "true") {
+    stop("No se encontró un repositorio Git en el directorio actual.")
+  }
+
+  # Agregar todos los cambios a la zona de preparación
+  system("git add -A")
+
+  # Realizar el commit con el mensaje proporcionado
+  system(paste("git commit -m", shQuote(commit_message)))
+
+  message("Se realizó el commit con éxito.")
 }
