@@ -71,7 +71,7 @@ BIEN_occurrence_genus_country <-function(genus,
                 collapse = ', '), ")",
           cultivated_$query,
           newworld_$query,natives_$query,"
-          AND country in (", paste(shQuote(country, type = "sh"),
+          AND country in (", paste(base::shQuote(country, type = "sh"),
                                    collapse = ', '), ")",
           cultivated_$query,newworld_$query,natives_$query,"
             AND higher_plant_group NOT IN ('Algae','Bacteria','Fungi') AND is_geovalid = 1
@@ -159,7 +159,7 @@ BIEN_occurrence_species_range<-function(species,
                  geovalid_$select,
                  "FROM view_full_occurrence_individual
                  WHERE scrubbed_species_binomial in (",
-                 paste(shQuote(species, type = "sh"),collapse = ', '),
+                 paste(base::shQuote(species, type = "sh"),collapse = ', '),
                  ")","
                  AND elevation_m BETWEEN ", elevation_min," AND ",
                  elevation_max,

@@ -18,6 +18,8 @@ A tibble with species, species_2, and growth_form
 This function takes a species name and returns the IUCN growth form
 }
 \examples{
+\dontrun{
 growth_forms_iucn("Gorilla gorilla")
+}
 
 }

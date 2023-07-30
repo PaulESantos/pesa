@@ -11,7 +11,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' growth_forms_iucn("Gorilla gorilla")
+#' }
 #'
 growth_forms_iucn <-  function (sp, key = NULL) {
   if (is.null(key) == TRUE) {

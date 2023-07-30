@@ -13,16 +13,12 @@
 #' commit_all_changes("Mensaje del commit")
 #' }
 #'
-#' @importFrom base system
-#' @importFrom utils message
-#' @importFrom utils paste
-#' @importFrom utils shQuote
 #'
 #' @export
 commit_all_changes <- function(commit_message) {
   # Verificar si el directorio actual es un repositorio Git
   if (!system("git rev-parse --is-inside-work-tree", intern = TRUE) == "true") {
-    stop("No se encontró un repositorio Git en el directorio actual.")
+    stop("No se encontro un repositorio Git en el directorio actual.")
   }
 
   # Agregar todos los cambios a la zona de preparación
@@ -31,5 +27,5 @@ commit_all_changes <- function(commit_message) {
   # Realizar el commit con el mensaje proporcionado
   system(paste("git commit -m", shQuote(commit_message)))
 
-  message("Se realizó el commit con éxito.")
+  message("Se realizo el commit con exito.")
 }
