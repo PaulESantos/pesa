@@ -30,6 +30,7 @@ Imports:
     RPostgreSQL,
     rredlist,
     rlang,
-    rstudioapi
+    rstudioapi,
+    stringdist
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
