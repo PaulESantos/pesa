@@ -31,6 +31,7 @@ Imports:
     rredlist,
     rlang,
     rstudioapi,
-    stringdist
+    stringdist,
+    sf
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
