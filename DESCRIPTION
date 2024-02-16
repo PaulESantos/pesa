@@ -32,6 +32,7 @@ Imports:
     rlang,
     rstudioapi,
     stringdist,
-    sf
+    sf,
+    janitor
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
