@@ -67,7 +67,7 @@ A dataframe returned by the query.
 }
 \examples{
 \dontrun{
-.BIEN_sql("SELECT DISTINCT country, scrubbed_species_binomial FROM view_full_occurrence_individual 
+.BIEN_sql("SELECT DISTINCT country, scrubbed_species_binomial FROM view_full_occurrence_individual
 WHERE country in ( 'United States' );")}
 }
 \keyword{internal}

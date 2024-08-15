@@ -499,3 +499,100 @@ BIEN_list_county_paul <-function(country=NULL,state=NULL,county=NULL,country.cod
   return(.BIEN_sql(query, ...))
 
 }
+
+
+
+
+
+# ---------------------------------------------------------------
+#' Extract occurrence data for specified species within a country and elevation range from the BIEN database
+#'
+#' `BIEN_occurrence_species_elev_range` retrieves occurrence records for specified species from the BIEN database, filtered by country and optional additional parameters such as cultivation status, geographic validation, and observation details.
+#'
+#' @param species A single species or a vector of species. Genus and species should be separated by a space. The genus should be capitalized (e.g., "Vaccinium floribundum").
+#' @param country A single country or a vector of countries from which occurrence records should be retrieved. Country names must match those in the BIEN database.
+#' @param only.geovalid Logical. Should the records be limited to those with validated geographic coordinates? Default is `TRUE`.
+#' @param cultivated Logical. Should known cultivated records be included? Default is `FALSE`.
+#' @param new.world Logical or `NULL`. Controls whether the results are limited to the New World or Old World. `NULL` (default) returns global records, `TRUE` returns only New World records, and `FALSE` returns only Old World records.
+#' @param all.taxonomy Logical. Should the returned data include all taxonomic information, both raw and scrubbed? Default is `FALSE`.
+#' @param native.status Logical. Should the returned data include information on introduction status? Default is `FALSE`. When `TRUE`, additional information about introduction status is included.
+#' @param natives.only Logical. Should introduced species be excluded from the results? Default is `TRUE`.
+#' @param observation.type Logical. Should the returned data include information on the type of observation (e.g., specimen, plot)? Default is `FALSE`.
+#' @param political.boundaries Logical. Should the returned data include information on political boundaries (e.g., country, state, municipality)? Default is `FALSE`.
+#' @param collection.info Logical. Should additional information about collection and identification be included? Default is `FALSE`.
+#' @param ... Additional arguments passed to internal functions.
+#' @note U.S. Forest Inventory and Analysis (FIA) coordinates have been fuzzed and swapped for confidentiality. For more details, see: https://www.fia.fs.fed.us/tools-data/spatial/Policy/index.php.
+#' @return A dataframe containing occurrence records for the specified species, filtered by the specified parameters. If no valid records are found, an empty dataframe is returned.
+#' @examples
+#' \dontrun{
+#' # Retrieve occurrence data for Vaccinium floribundum within specified countries
+#' BIEN_occurrence_species_elev_range(species = "Vaccinium floribundum",
+#'                                    country = "Peru"))
+#' }
+#' @family occurrence functions
+#' @export
+BIEN_occurrence_species_elev_range <- function(species,
+                                               country = NULL,
+                                               cultivated = FALSE,
+                                               new.world = NULL,
+                                               all.taxonomy = FALSE,
+                                               native.status = FALSE,
+                                               natives.only = TRUE,
+                                               observation.type = FALSE,
+                                               political.boundaries = FALSE,
+                                               collection.info = FALSE,
+                                               only.geovalid = TRUE, ...) {
+
+  # Validación de entradas
+  .is_log(cultivated)
+  .is_log_or_null(new.world)
+  .is_log(all.taxonomy)
+  .is_char(species)
+  .is_log(native.status)
+  .is_log(observation.type)
+  .is_log(political.boundaries)
+  .is_log(natives.only)
+  .is_log(collection.info)
+  .is_log(only.geovalid)
+
+  # Configurar condiciones para la consulta
+  cultivated_ <- .cultivated_check(cultivated)
+  newworld_ <- .newworld_check(new.world)
+  taxonomy_ <- .taxonomy_check(all.taxonomy)
+  native_ <- .native_check(native.status)
+  observation_ <- .observation_check(observation.type)
+  political_ <- .political_check(political.boundaries)
+  natives_ <- .natives_check(natives.only)
+  collection_ <- .collection_check(collection.info)
+  geovalid_ <- .geovalid_check(only.geovalid)
+
+  # Crear la consulta SQL
+  query <- paste("SELECT scrubbed_species_binomial",
+                 taxonomy_$select,
+                 native_$select,
+                 political_$select,
+                 " ,latitude, longitude, elevation_m, date_collected, datasource, dataset, dataowner, custodial_institution_codes, collection_code, view_full_occurrence_individual.datasource_id",
+                 collection_$select,
+                 cultivated_$select,
+                 newworld_$select,
+                 observation_$select,
+                 geovalid_$select,
+                 "FROM view_full_occurrence_individual
+                 WHERE scrubbed_species_binomial IN (",
+                 paste(base::shQuote(species, type = "sh"), collapse = ', '),
+                 ")",
+                 "AND country IN (", paste(base::shQuote(country, type = "sh"), collapse = ', '), ")",
+                 cultivated_$query,
+                 newworld_$query,
+                 natives_$query,
+                 observation_$query,
+                 geovalid_$query,
+                 "AND higher_plant_group NOT IN ('Algae', 'Bacteria', 'Fungi')
+                 AND (georef_protocol IS NULL OR georef_protocol <> 'county centroid')
+                 AND (is_centroid IS NULL OR is_centroid = 0)
+                 AND scrubbed_species_binomial IS NOT NULL
+                 ORDER BY scrubbed_species_binomial;")
+
+  # Ejecutar la consulta
+  return(.BIEN_sql(query, ...))
+}

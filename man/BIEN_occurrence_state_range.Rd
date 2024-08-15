@@ -75,6 +75,7 @@ BIEN_occurrence_state_range("Peru", "Cusco", 3000, 3300)}
 \seealso{
 Other occurrence functions: 
 \code{\link{BIEN_occurrence_genus_country}()},
+\code{\link{BIEN_occurrence_species_elev_range}()},
 \code{\link{BIEN_occurrence_species_range}()}
 }
 \concept{occurrence functions}
