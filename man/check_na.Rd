@@ -10,8 +10,21 @@ check_na(df)
 \item{df}{A tibble or data.frame.}
 }
 \value{
-A tibble displaying the number of missing values in the dataframe.
+A tibble displaying the number of missing values (\code{amount_na}) and their percentage (\code{percent_na})
+for each column with at least one missing value.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function calculates the number of missing values (NA) in each column of a tibble or data.frame,
+and provides the percentage of missing values relative to the total number of rows.
+}
+\examples{
+df <- data.frame(
+col1 = c(1, 2, NA, 4),
+col2 = c(NA, NA, 3, 4),
+col3 = c(1, 2, 3, 4)
+)
+result <- check_na(df)
+
 }

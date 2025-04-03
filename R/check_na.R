@@ -2,23 +2,43 @@
 #' @description
 #' `r lifecycle::badge("stable")`
 #'
+#' This function calculates the number of missing values (NA) in each column of a tibble or data.frame,
+#' and provides the percentage of missing values relative to the total number of rows.
+#'
 #' @param df A tibble or data.frame.
 #'
-#' @return A tibble displaying the number of missing values in the dataframe.
+#' @return A tibble displaying the number of missing values (`amount_na`) and their percentage (`percent_na`)
+#'         for each column with at least one missing value.
 #' @export
 #'
+#' @examples
+#' df <- data.frame(
+#' col1 = c(1, 2, NA, 4),
+#' col2 = c(NA, NA, 3, 4),
+#' col3 = c(1, 2, 3, 4)
+#' )
+#' result <- check_na(df)
+#'
 check_na <- function(df) {
-  n <- function(x) {
-    sum(is.na(x))
+  if (!is.data.frame(df)) {
+    stop("The input must be a data frame or tibble.")
   }
-  df <- df |>
-    dplyr::summarise_all(list(~n(.)))
-  t_df <- data.table::transpose(df)
-  colnames(t_df) <- rownames(df)
-  rownames(t_df) <- colnames(df)
-  t_df <- tibble::rownames_to_column(t_df) |>
-    tibble::as_tibble() |>
-    purrr::set_names(c("vars", "amount_na")) |>
-    dplyr::filter(amount_na > 0)
-  return(t_df)
+
+  df |>
+    dplyr::summarise(
+      dplyr::across(
+        dplyr::everything(),
+        list(amount = ~ sum(is.na(.x)),
+             percent = ~ mean(is.na(.x)) * 100),
+        .names = "{.col} - {.fn}"
+      )
+    ) |>
+    tidyr::pivot_longer(
+      cols = dplyr::everything(),
+      names_to = c("vars", ".value"),
+      names_sep = " - "
+    ) |>
+    dplyr::filter(amount > 0) |>
+    dplyr::mutate(percent = round(percent, 2))
+
 }

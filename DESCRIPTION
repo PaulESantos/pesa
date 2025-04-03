@@ -35,6 +35,7 @@ Imports:
     sf,
     janitor,
     showtext,
-    sysfonts
+    sysfonts,
+    tidyr
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues
