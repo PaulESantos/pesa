@@ -1,7 +1,9 @@
 utils::globalVariables(c(".", "amount_na", "%+%", "id", "data",
                          "amount", "percent",
                          ".TNRS_base", "tnrs", "lcvp",
-                         "open", "index", "group"))
+                         "open", "index", "group",
+                         "assessment_id", "orig_genus", "orig_species",
+                         "iucn_info", "sorter", "orig_name"))
 #' Count all missing values in a tibble
 #' @description
 #' `r lifecycle::badge("stable")`
