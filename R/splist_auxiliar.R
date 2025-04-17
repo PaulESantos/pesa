@@ -1,3 +1,29 @@
+#' Standardize taxonomic names
+#'
+#' This internal function standardizes scientific names by applying a set of
+#' transformations to improve consistency before further parsing or matching.
+#'
+#' @param splist A character vector containing scientific names to be standardized.
+#'
+#' @return A character vector of standardized names. Transformations include:
+#' \itemize{
+#'   \item Conversion to uppercase.
+#'   \item Removal of prefixes such as `CF.` and `AFF.`.
+#'   \item Trimming of leading and trailing whitespace.
+#'   \item Replacing underscores (`_`) with spaces.
+#'   \item Standardization of infraspecific ranks (e.g. `VAR`, `F.`, `SUBSP.`).
+#'   \item Removal of hybrid indicators (`X` or `×`).
+#'   \item Elimination of non-alphabetical symbols at the beginning of the name.
+#' }
+#'
+#' @details
+#' Hybrid symbols (e.g., `"X"` or `"×"`) are removed with a warning listing
+#' the affected names.
+#'
+#' @examples
+#' splist <- c("cf. Abies alba", "Pinus_sylvestris", "X Quercus robur")
+#' .names_standardize(splist)
+#'
 #' @keywords internal
 .names_standardize <- function(splist) {
   # Convertir todo a mayúsculas
@@ -44,8 +70,33 @@
   return(fixed10)
 }
 #------------------------------------------------
+#' Classify species names into components
+#'
+#' This internal function wraps the `.classify_algo()` routine to parse a list of
+#' scientific names and split them into their taxonomic components: genus, species,
+#' author, and infraspecific ranks (e.g., subspecies, variety).
+#'
+#' @param x A character vector of scientific names.
+#'
+#' @return A matrix where each row corresponds to a name in the input and columns
+#' represent:
+#' \describe{
+#'   \item{`orig_name`}{The standardized original name.}
+#'   \item{`orig_genus`}{The genus name.}
+#'   \item{`orig_species`}{The species epithet.}
+#'   \item{`author`}{The authorship string (if present).}
+#'   \item{`subspecies`}{The subspecies name (if present).}
+#'   \item{`variety`}{The variety name (if present).}
+#'   \item{`subvariety`}{The subvariety name (if present).}
+#'   \item{`forma`}{The forma name (if present).}
+#'   \item{`subforma`}{The subforma name (if present).}
+#' }
+#'
+#' @details
+#' This function is designed to process batches of names efficiently. It uses
+#' `.names_standardize()` to clean the input before parsing, and expects that
+#' `.classify_algo()` handles the actual parsing logic per name.
 #' @keywords internal
-# Function wrap of .classify_algo for multiple species
 .splist_classify <- function(x) {
 
   x <- .names_standardize(x)
@@ -93,7 +144,40 @@
 }
 
 #------------------------------------------------
-# The algorithm for one name
+#' Clasificador interno de nombres científicos por categorías infraespecíficas
+#'
+#' Esta función interna implementa el algoritmo que clasifica una especie
+#' científica estandarizada en sus componentes taxonómicos: género, epíteto específico,
+#' autoría y posibles categorías infraespecíficas (subespecie, variedad, forma, etc.).
+#' Se utiliza como parte del flujo de trabajo de estandarización y descomposición
+#' de nombres en análisis taxonómicos.
+#'
+#' @param x_split_i Un vector de caracteres que representa el nombre científico
+#' separado por espacios (por ejemplo, `strsplit(nombre, " ")[[1]]`).
+#' @param Infrasp_cat_reg Expresiones regulares que representan abreviaturas
+#' comunes de categorías infraespecíficas (por ejemplo, "SUBSP.", "VAR.", "F.").
+#'
+#' @return Un vector de 10 elementos que incluye:
+#' \describe{
+#'   \item{[1]}{Género}
+#'   \item{[2]}{Epíteto específico}
+#'   \item{[3]}{Nombre del autor (si corresponde)}
+#'   \item{[4]}{(Reservado, sin uso en esta función)}
+#'   \item{[5]}{Subespecie}
+#'   \item{[6]}{(Reservado, eliminado por funciones posteriores)}
+#'   \item{[7]}{Variedad}
+#'   \item{[8]}{Subvariedad}
+#'   \item{[9]}{Forma}
+#'   \item{[10]}{Subforma}
+#' }
+#'
+#' @details
+#' Esta función busca patrones específicos de abreviaturas infraespecíficas dentro
+#' del nombre. Si encuentra alguna, asigna el nombre correspondiente a la posición
+#' de salida apropiada. Además, identifica y asigna el nombre del autor si no forma
+#' parte del nombre infraespecífico.
+#'
+#' @keywords internal
 .classify_algo <- function(x_split_i,
                            Infrasp_cat_reg) {
 
@@ -155,28 +239,49 @@
 }
 
 
+# ---------------------------------------------------------------
+#' Check for binomial names in a species list
+#'
+#' This internal function verifies whether each entry in a species list contains both
+#' a genus (`orig_genus`) and species epithet (`orig_species`). It flags incomplete
+#' entries (e.g., names at the genus level only) and emits a message listing these cases.
+#'
+#' @param splist_class A `data.frame` or `tibble` containing at least the columns
+#' `orig_genus`, `orig_species`, and `orig_name`. These represent, respectively, the
+#' genus, species epithet, and the original submitted name.
+#'
+#' @return The original `splist_class` object with an additional column:
+#' \describe{
+#'   \item{`binomial`}{Character column with values `"binomial"` or `"non binomial"`,
+#'   indicating whether each name includes both genus and species.}
+#' }
+#'
+#' @details
+#' The function is designed to validate species names before further taxonomic
+#' processing. It ensures all names are binomial. If any are incomplete, a message
+#' will be printed listing the invalid names.
+#'
 #' @keywords internal
 .check_binomial <- function(splist_class) {
-
   splist_class$binomial <- ifelse(
     !is.na(splist_class$orig_genus) & !is.na(splist_class$orig_species),
     "binomial",
     "non binomial"
   )
 
-    missing_bino <- splist_class[splist_class$binomial == "non binomial",]
+  missing_bino <- splist_class[splist_class$binomial == "non binomial",]
 
-
-  if (length(missing_bino) > 0) {
-    message(paste0("The species list (splist) should only include binomial names.",
-                   " The following names were submitted at the genus level: ",
-                   paste(paste0("'", missing_bino$orig_name, "'"),
-                         collapse = ", ")))
-
+  if (length(unique(missing_bino$orig_name)) > 0) {
+    message(paste0(
+      "The species list (splist) should only include binomial names. ",
+      "The following names were submitted at the genus level: ",
+      paste(paste0("'", unique(missing_bino$orig_name), "'"), collapse = ", ")
+    ))
   }
 
   return(splist_class)
 }
+
 
 
 # ---------------------------------------------------------------
@@ -197,7 +302,6 @@
 #' }
 #'
 #' @keywords internal
-#' @noRd
 .transform_split_classify <- function(df) {
   # Convertir a data frame
   df <- as.data.frame(df)
@@ -238,6 +342,7 @@
 }
 
 
+# ---------------------------------------------------------------
 #' Separar nombres científicos en columnas de género y especie
 #'
 #' Esta función toma un data frame y una columna que contiene nombres científicos en formato "Género especie",
@@ -264,7 +369,53 @@
   return(df)
 }
 
+# ---------------------------------------------------------------
+#' Formateo de lista de especies en estructura taxonómica estandarizada
+#'
+#' Esta función interna toma una lista de nombres científicos de especies
+#' (como vector de caracteres o `data.frame`) y los convierte en una estructura
+#' tabular estandarizada que incluye sus componentes taxonómicos (género, epíteto, etc.),
+#' además de verificar la validez del formato binomial.
+#'
+#' @param splist Un vector de caracteres o un `data.frame` que contiene los nombres científicos
+#' de especies.
+#' @param col_name Nombre de la columna (como cadena de texto sin comillas) en `splist` que contiene los nombres
+#' científicos, en caso de que `splist` sea un `data.frame`. Por defecto toma `var_name`,
+#' una variable esperada en el entorno del paquete.
+#'
+#' @return Si `splist` es un vector, devuelve un `data.frame` con las columnas derivadas de los componentes
+#' taxonómicos del nombre científico. Si es un `data.frame`, devuelve el mismo objeto con columnas
+#' adicionales generadas por `.splist_format_df()` y un índice de orden (`sorter`) agregado.
+#'
+#' @details
+#' Esta función aplica diferentes rutas de procesamiento dependiendo del tipo de entrada:
+#' \itemize{
+#'   \item Si `splist` es un vector de caracteres, se clasifica con `.splist_classify()`,
+#'   se transforma con `.transform_split_classify()` y se verifica con `.check_binomial()`.
+#'   \item Si `splist` es un `data.frame`, se procesa con `.splist_format_df()` usando la columna indicada
+#'   y luego se verifica el formato binomial. También se añade una columna auxiliar `sorter` para
+#'   conservar el orden original.
+#' }
+#'
+#' @keywords internal
 
+.splist_formated <- function(splist, col_name = var_name ){
+
+  if(is.character(splist)){
+    splist_formated <- .splist_classify(splist) |>
+      .transform_split_classify() |>
+      .check_binomial()
+  }
+  else if (is.data.frame(splist)){
+    splist_formated <- .splist_format_df(splist, col_name = col_name) |>
+      .check_binomial() |>
+      dplyr::mutate(sorter = dplyr::row_number()) |>
+      dplyr::relocate(sorter)
+  }
+  return(splist_formated)
+}
+
+# ---------------------------------------------------------------
 #' Obtener la categoría de la Lista Roja de la UICN para una especie
 #'
 #' Esta función consulta la API de la UICN para recuperar la categoría de conservación

@@ -1,6 +1,6 @@
 Package: pesa
 Title: Personal R pacakge
-Version: 0.0.1.2
+Version: 0.0.1.3
 Authors@R: 
     person(given = "Paul Efren",
            family = "Santos Andrade",
@@ -10,9 +10,6 @@ Description: Package of personal commonly used R functions.
 License: MIT + file LICENSE
 Suggests: 
     testthat (>= 3.0.0),
-    stringr,
-    purrr,
-    tibble,
     readxl,
     crayon,
     showtext,
@@ -22,7 +19,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Date: 2021
+Date: 2025
 Imports: 
     dplyr,
     data.table,
@@ -36,6 +33,9 @@ Imports:
     sf,
     janitor,
     tidyr,
-    iucnredlist
+    iucnredlist,
+    purrr,
+    stringr,
+    tibble
 URL: https://github.com/PaulESantos/pesa
 BugReports: https://github.com/PaulESantos/pesa/issues

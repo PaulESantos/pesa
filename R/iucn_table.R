@@ -49,26 +49,17 @@ iucn_tbl <- function(splist,
                      api = NULL,
                      var_name = "scientific_name"){
 
-  .splist_formated <- function(splist, col_name = var_name ){
-
-    if(is.character(splist)){
-      splist_formated <- .splist_classify(splist) |>
-        .transform_split_classify() |>
-        .check_binomial()
-    }
-    else if (is.data.frame(splist)){
-      splist_formated <- .splist_format_df(splist, col_name = col_name) |>
-        .check_binomial() |>
-        dplyr::mutate(sorter = dplyr::row_number()) |>
-        dplyr::relocate(sorter)
-    }
-    return(splist_formated)
-  }
-
   splist_output <- .splist_formated(splist = splist)
 
   splist_class_binomial <- splist_output[splist_output$binomial == "binomial", ]
+
   splist_class_non_binomial <- splist_output[splist_output$binomial == "non binomial", ]
+
+  if(nrow(splist_class_non_binomial) != 0){
+    splist_class_non_binomial$category <- "---"
+  }else{
+    splist_class_non_binomial
+  }
 
   resultado <- splist_class_binomial |>
     dplyr::mutate(
@@ -80,13 +71,13 @@ iucn_tbl <- function(splist,
     tidyr::unnest(iucn_info) |>
     dplyr::bind_rows(splist_class_non_binomial) |>
     dplyr::arrange(sorter) |>
-    dplyr::mutate(orig_name = str_to_simple_cap(orig_name))
+    dplyr::mutate(orig_name = str_to_simple_cap(orig_name),
+                  category = ifelse(is.na(category), "---", category))
   ### otput vars
   if(is.character(splist)){
     var_name <- c("sorter","orig_name", "orig_genus", "orig_species", "category")
   }
   else if(is.data.frame(splist)){
-    #class(splist) %in% c( "tbl_df", "tbl", "data.frame")
     xx <- names(splist)
     xx[xx == var_name] <- "orig_name"
 
