@@ -16,21 +16,21 @@ comunes de categorías infraespecíficas (por ejemplo, "SUBSP.", "VAR.", "F.").}
 \value{
 Un vector de 10 elementos que incluye:
 \describe{
-\item{\link{1}}{Género}
-\item{\link{2}}{Epíteto específico}
-\item{\link{3}}{Nombre del autor (si corresponde)}
-\item{\link{4}}{(Reservado, sin uso en esta función)}
-\item{\link{5}}{Subespecie}
-\item{\link{6}}{(Reservado, eliminado por funciones posteriores)}
-\item{\link{7}}{Variedad}
-\item{\link{8}}{Subvariedad}
-\item{\link{9}}{Forma}
-\item{\link{10}}{Subforma}
+\item{Elemento 1}{Género}
+\item{Elemento 2}{Epíteto específico}
+\item{Elemento 3}{Nombre del autor (si corresponde)}
+\item{Elemento 4}{(Reservado, sin uso en esta función)}
+\item{Elemento 5}{Subespecie}
+\item{Elemento 6}{(Reservado, eliminado por funciones posteriores)}
+\item{Elemento 7}{Variedad}
+\item{Elemento 8}{Subvariedad}
+\item{Elemento 9}{Forma}
+\item{Elemento 10}{Subforma}
 }
 }
 \description{
-Esta función interna implementa el algoritmo que clasifica una especie
-científica estandarizada en sus componentes taxonómicos: género, epíteto específico,
+Esta función interna implementa el algoritmo que clasifica un nombre
+científico estandarizado en sus componentes taxonómicos: género, epíteto específico,
 autoría y posibles categorías infraespecíficas (subespecie, variedad, forma, etc.).
 Se utiliza como parte del flujo de trabajo de estandarización y descomposición
 de nombres en análisis taxonómicos.

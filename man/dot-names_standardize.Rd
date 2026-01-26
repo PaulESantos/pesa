@@ -29,9 +29,4 @@ transformations to improve consistency before further parsing or matching.
 Hybrid symbols (e.g., \code{"X"} or \code{"×"}) are removed with a warning listing
 the affected names.
 }
-\examples{
-splist <- c("cf. Abies alba", "Pinus_sylvestris", "X Quercus robur")
-.names_standardize(splist)
-
-}
 \keyword{internal}

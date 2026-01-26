@@ -20,10 +20,6 @@
 #' Hybrid symbols (e.g., `"X"` or `"×"`) are removed with a warning listing
 #' the affected names.
 #'
-#' @examples
-#' splist <- c("cf. Abies alba", "Pinus_sylvestris", "X Quercus robur")
-#' .names_standardize(splist)
-#'
 #' @keywords internal
 .names_standardize <- function(splist) {
   # Convertir todo a mayúsculas
@@ -146,8 +142,8 @@
 #------------------------------------------------
 #' Clasificador interno de nombres científicos por categorías infraespecíficas
 #'
-#' Esta función interna implementa el algoritmo que clasifica una especie
-#' científica estandarizada en sus componentes taxonómicos: género, epíteto específico,
+#' Esta función interna implementa el algoritmo que clasifica un nombre
+#' científico estandarizado en sus componentes taxonómicos: género, epíteto específico,
 #' autoría y posibles categorías infraespecíficas (subespecie, variedad, forma, etc.).
 #' Se utiliza como parte del flujo de trabajo de estandarización y descomposición
 #' de nombres en análisis taxonómicos.
@@ -159,16 +155,16 @@
 #'
 #' @return Un vector de 10 elementos que incluye:
 #' \describe{
-#'   \item{[1]}{Género}
-#'   \item{[2]}{Epíteto específico}
-#'   \item{[3]}{Nombre del autor (si corresponde)}
-#'   \item{[4]}{(Reservado, sin uso en esta función)}
-#'   \item{[5]}{Subespecie}
-#'   \item{[6]}{(Reservado, eliminado por funciones posteriores)}
-#'   \item{[7]}{Variedad}
-#'   \item{[8]}{Subvariedad}
-#'   \item{[9]}{Forma}
-#'   \item{[10]}{Subforma}
+#'   \item{Elemento 1}{Género}
+#'   \item{Elemento 2}{Epíteto específico}
+#'   \item{Elemento 3}{Nombre del autor (si corresponde)}
+#'   \item{Elemento 4}{(Reservado, sin uso en esta función)}
+#'   \item{Elemento 5}{Subespecie}
+#'   \item{Elemento 6}{(Reservado, eliminado por funciones posteriores)}
+#'   \item{Elemento 7}{Variedad}
+#'   \item{Elemento 8}{Subvariedad}
+#'   \item{Elemento 9}{Forma}
+#'   \item{Elemento 10}{Subforma}
 #' }
 #'
 #' @details
