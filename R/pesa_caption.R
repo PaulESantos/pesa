@@ -7,7 +7,8 @@
 #' @export
 setup_fonts <- function(fontfamily) {
   # Load Font Awesome Brands
-  sysfonts::font_add(family = "fa6-brands", regular = "inst/extdata/fa-brands-400.ttf")
+  font_path <- system.file("extdata", "fa-brands-400.ttf", package = "pesa")
+  sysfonts::font_add(family = "fa6-brands", regular = font_path)
   # Load additional text font
   sysfonts::font_add_google(name = fontfamily, family = "fontfamily")
   # Enable automatic text rendering
@@ -25,10 +26,10 @@ setup_fonts <- function(fontfamily) {
 #' @export
 get_social_icons <- function() {
   list(
-    linkedin = "<span style='font-family:\"fa6-brands\";'>&#xf08c;</span>",  # LinkedIn icon
-    github   = "<span style='font-family:\"fa6-brands\";'>&#xf09b;</span>",  # GitHub icon
-    twitter  = "<span style='font-family:\"fa6-brands\";'>&#xe61b;</span>",  # Twitter icon
-    bluesky  = "<span style='font-family:\"fa6-brands\";'>&#xe6a3;</span>"   # Bluesky icon
+    linkedin = "<span style='font-family:\"fa6-brands\";'>&#xf08c;</span>", # LinkedIn icon
+    github = "<span style='font-family:\"fa6-brands\";'>&#xf09b;</span>", # GitHub icon
+    twitter = "<span style='font-family:\"fa6-brands\";'>&#xe61b;</span>", # Twitter icon
+    bluesky = "<span style='font-family:\"fa6-brands\";'>&#xe6a3;</span>" # Bluesky icon
   )
 }
 
@@ -50,10 +51,12 @@ get_social_icons <- function() {
 #' )
 #' p_social_caption(usernames, fontfamily = "Commissioner")
 #' @export
-p_social_caption <- function(usernames,
-                                  highlight_color = "#fb0f01",
-                                  text_color = "#2F4F4F",
-                                  fontfamily) {
+p_social_caption <- function(
+  usernames,
+  highlight_color = "#fb0f01",
+  text_color = "#2F4F4F",
+  fontfamily
+) {
   # Ensure fonts are configured
   setup_fonts(fontfamily)
 

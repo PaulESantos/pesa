@@ -28,8 +28,7 @@ check_na <- function(df) {
     dplyr::summarise(
       dplyr::across(
         dplyr::everything(),
-        list(amount = ~ sum(is.na(.x)),
-             percent = ~ mean(is.na(.x)) * 100),
+        list(amount = ~ sum(is.na(.x)), percent = ~ mean(is.na(.x)) * 100),
         .names = "{.col} - {.fn}"
       )
     ) |>
@@ -40,5 +39,4 @@ check_na <- function(df) {
     ) |>
     dplyr::filter(amount > 0) |>
     dplyr::mutate(percent = round(percent, 2))
-
 }

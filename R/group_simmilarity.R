@@ -13,10 +13,14 @@
 #'
 #' @export
 group_similarity <- function(vect, dist = 0.4) {
-  purrr::map_dfr(vect, ~ {
-    i <- which(stringdist::stringdist(., vect, "jw") < dist)
-    tibble::tibble(index = i, title = vect[i])
-  }, .id = "group") |>
+  purrr::map_dfr(
+    vect,
+    ~ {
+      i <- which(stringdist::stringdist(., vect, "jw") < dist)
+      tibble::tibble(index = i, title = vect[i])
+    },
+    .id = "group"
+  ) |>
     dplyr::distinct(index, .keep_all = TRUE) |>
     dplyr::mutate(group = as.integer(group))
 }

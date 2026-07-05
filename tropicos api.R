@@ -28,17 +28,18 @@ tropicos <- function(variables) {
     df <- fromJSON(content(response, "text"))
   } else {
     # La solicitud falló
-    print(paste("La solicitud falló con el código de estado", status_code(response)))
+    print(paste(
+      "La solicitud falló con el código de estado",
+      status_code(response)
+    ))
   }
   df
 }
 ?status_code()
 
 
-df |>  janitor::clean_names()
+df |> janitor::clean_names()
 taxize::tp_search("Guatteria alutacea", key = tropi_key)
-
-
 
 
 # -------------------------------------------------------------------------
@@ -75,11 +76,13 @@ for (nombre in nombres) {
     resultados[[nombre]] <- fromJSON(content(response, "text"))
   } else {
     # La solicitud falló
-    print(paste("La solicitud falló con el código de estado",
-                status_code(response)))
+    print(paste(
+      "La solicitud falló con el código de estado",
+      status_code(response)
+    ))
   }
 }
-resultados |>  class()
+resultados |> class()
 length(resultados)
 rbind(resultados)
 
@@ -91,4 +94,4 @@ dim(df)
 df
 resultados[1]
 resultados[2]
-do.call(rbind, lapply(resultados, data.frame, stringsAsFactors=FALSE))
+do.call(rbind, lapply(resultados, data.frame, stringsAsFactors = FALSE))

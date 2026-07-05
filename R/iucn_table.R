@@ -45,19 +45,18 @@
 #' }
 #'
 #' @export
-iucn_tbl <- function(splist,
-                     api = NULL,
-                     var_name = "scientific_name"){
-
+iucn_tbl <- function(splist, api = NULL, var_name = "scientific_name") {
   splist_output <- .splist_formated(splist = splist)
 
   splist_class_binomial <- splist_output[splist_output$binomial == "binomial", ]
 
-  splist_class_non_binomial <- splist_output[splist_output$binomial == "non binomial", ]
+  splist_class_non_binomial <- splist_output[
+    splist_output$binomial == "non binomial",
+  ]
 
-  if(nrow(splist_class_non_binomial) != 0){
+  if (nrow(splist_class_non_binomial) != 0) {
     splist_class_non_binomial$category <- "---"
-  }else{
+  } else {
     splist_class_non_binomial
   }
 
@@ -65,26 +64,30 @@ iucn_tbl <- function(splist,
     dplyr::mutate(
       iucn_info = purrr::pmap(
         list(orig_genus, orig_species),
-        ~ get_iucn_category(genus = ..1, species = ..2, api = api)
+        ~ get_iucn_category(genus = ..1, species = ..2, api_key = api)
       )
     ) |>
     tidyr::unnest(iucn_info) |>
     dplyr::bind_rows(splist_class_non_binomial) |>
     dplyr::arrange(sorter) |>
-    dplyr::mutate(orig_name = str_to_simple_cap(orig_name),
-                  category = ifelse(is.na(category), "---", category))
+    dplyr::mutate(
+      orig_name = str_to_simple_cap(orig_name),
+      category = ifelse(is.na(category), "---", category)
+    )
   ### otput vars
-  if(is.character(splist)){
-    var_name <- c("sorter","orig_name", "orig_genus", "orig_species", "category")
-  }
-  else if(is.data.frame(splist)){
+  if (is.character(splist)) {
+    var_name <- c(
+      "sorter",
+      "orig_name",
+      "orig_genus",
+      "orig_species",
+      "category"
+    )
+  } else if (is.data.frame(splist)) {
     xx <- names(splist)
     xx[xx == var_name] <- "orig_name"
 
-    var_name <- c("sorter",
-                  xx,
-                  "category")
+    var_name <- c("sorter", xx, "category")
   }
   return(dplyr::select(resultado, dplyr::all_of(var_name)))
 }
-

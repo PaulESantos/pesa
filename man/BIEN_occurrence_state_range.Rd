@@ -73,9 +73,9 @@ This function requires you supply either 1) a single country with one or more st
 BIEN_occurrence_state_range("Peru", "Cusco", 3000, 3300)}
 }
 \seealso{
-Other occurrence functions: 
-\code{\link{BIEN_occurrence_genus_country}()},
-\code{\link{BIEN_occurrence_species_elev_range}()},
-\code{\link{BIEN_occurrence_species_range}()}
+Other occurrence functions:
+\code{\link[=BIEN_occurrence_genus_country]{BIEN_occurrence_genus_country()}},
+\code{\link[=BIEN_occurrence_species_elev_range]{BIEN_occurrence_species_elev_range()}},
+\code{\link[=BIEN_occurrence_species_range]{BIEN_occurrence_species_range()}}
 }
 \concept{occurrence functions}

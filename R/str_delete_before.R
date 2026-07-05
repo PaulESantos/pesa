@@ -10,16 +10,18 @@
 #' @export
 #'
 
-str_delete_before <- function(string, pattern, pos = 1){
-  pos_pattern <- stringr::str_locate_all(string = string,
-                                         pattern = pattern)
-  start_pattern <- pos_pattern[[1]][,"start"]
-  start_pattern <- rev(start_pattern)
-  start_pattern <- start_pattern[pos]
+str_delete_before <- function(string, pattern, pos = 1) {
+  pos_pattern <- stringr::str_locate_all(string = string, pattern = pattern)
 
-  string_delete <- stringr::str_sub(string = string,
-                                    start = start_pattern + 1,
-                                    end = stringr::str_length(string) )
+  starts <- sapply(pos_pattern, function(m) {
+    if (nrow(m) >= pos) {
+      rev(m[, "start"])[pos]
+    } else {
+      NA_integer_
+    }
+  })
+
+  string_delete <- stringr::str_sub(string = string, start = starts + 1)
 
   return(string_delete)
 }

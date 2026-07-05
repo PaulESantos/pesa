@@ -18,8 +18,13 @@
 #' @export
 #'
 simple_cap <- function(x) {
+  # Remove leading/trailing spaces first
+  x <- trimws(x)
+
   # Split each string into words, remove unnecessary white spaces, and convert to lowercase
-  words <- sapply(strsplit(x, "\\s+"), function(words) paste(tolower(words), collapse = " "))
+  words <- sapply(strsplit(x, "\\s+"), function(words) {
+    paste(tolower(words), collapse = " ")
+  })
 
   # Capitalize the first letter of each word
   capitalized <- sapply(strsplit(words, ""), function(word) {

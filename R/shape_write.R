@@ -18,8 +18,10 @@
 #' @export
 shape_write <- function(sf, folder, filename) {
   sf::st_zm(sf, drop = TRUE, what = 'ZM') |>
-    sf::st_write(dsn = folder,     # Folder
-                 layer = filename,  # Filename
-                 driver = "ESRI Shapefile",
-                 append = FALSE)
+    sf::st_write(
+      dsn = folder, # Folder
+      layer = filename, # Filename
+      driver = "ESRI Shapefile",
+      append = FALSE
+    )
 }

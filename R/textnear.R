@@ -90,24 +90,23 @@
 #'
 #' @export
 textnear <- function(
-    x,
-    y,
-    by.x,
-    by.y,
-    type          = "inner",
-    method        = "osa",
-    maxDist       = 4,
-    weight        = c(d = 1, i = 1, s = 1, t = 1),
-    p             = 0,
-    bt            = 0,
-    q             = 1,
-    nomatch       = NA_integer_,
-    matchNA       = TRUE,
-    useBytes      = FALSE,
-    nthread       = getOption("sd_num_thread", 1L),
-    suffixes      = c(".x", ".y")
+  x,
+  y,
+  by.x,
+  by.y,
+  type = "inner",
+  method = "osa",
+  maxDist = 4,
+  weight = c(d = 1, i = 1, s = 1, t = 1),
+  p = 0,
+  bt = 0,
+  q = 1,
+  nomatch = NA_integer_,
+  matchNA = TRUE,
+  useBytes = FALSE,
+  nthread = getOption("sd_num_thread", 1L),
+  suffixes = c(".x", ".y")
 ) {
-
   # Validaciones básicas
   type <- match.arg(type, c("inner", "left", "right", "full", "semi", "anti"))
 
@@ -134,18 +133,18 @@ textnear <- function(
   if (type == "right") {
     # Para right join, buscar coincidencias de y en x
     match_idx <- stringdist::amatch(
-      x         = y[[by.y]],
-      table     = x[[by.x]],
-      method    = method,
-      maxDist   = maxDist,
-      weight    = weight,
-      p         = p,
-      bt        = bt,
-      q         = q,
-      nomatch   = nomatch,
-      matchNA   = matchNA,
-      useBytes  = useBytes,
-      nthread   = nthread
+      x = y[[by.y]],
+      table = x[[by.x]],
+      method = method,
+      maxDist = maxDist,
+      weight = weight,
+      p = p,
+      bt = bt,
+      q = q,
+      nomatch = nomatch,
+      matchNA = matchNA,
+      useBytes = useBytes,
+      nthread = nthread
     )
     y[, (ukx) := match_idx]
     result <- y[x, on = ukx, nomatch = 0L]
@@ -155,18 +154,18 @@ textnear <- function(
     # Otros joins → coincidencia normal (de x hacia y)
     # ────────────────────────────────────────────────────────────────
     match_idx <- stringdist::amatch(
-      x         = x[[by.x]],
-      table     = y[[by.y]],
-      method    = method,
-      maxDist   = maxDist,
-      weight    = weight,
-      p         = p,
-      bt        = bt,
-      q         = q,
-      nomatch   = nomatch,
-      matchNA   = matchNA,
-      useBytes  = useBytes,
-      nthread   = nthread
+      x = x[[by.x]],
+      table = y[[by.y]],
+      method = method,
+      maxDist = maxDist,
+      weight = weight,
+      p = p,
+      bt = bt,
+      q = q,
+      nomatch = nomatch,
+      matchNA = matchNA,
+      useBytes = useBytes,
+      nthread = nthread
     )
     x[, (uky) := match_idx]
 
@@ -189,7 +188,7 @@ textnear <- function(
   if (type == "full" && !is_right_join) {
     # Identificar filas de y que no tienen coincidencia
     matched_uky <- unique(result[!is.na(get(uky))][[uky]])
-    unmatched_y <- y[!get(uky) %chin% matched_uky]
+    unmatched_y <- y[!get(uky) %in% matched_uky]
 
     # Crear estructura vacía compatible con result
     full_cols <- names(result)
@@ -223,7 +222,7 @@ textnear <- function(
 
     for (i in seq_along(i_cols)) {
       orig_col <- overlaps[i]
-      i_col    <- i_cols[i]
+      i_col <- i_cols[i]
 
       # Determinar sufijos según el tipo de join
       suffix_y <- if (is_right_join) suffixes[1] else suffixes[2]

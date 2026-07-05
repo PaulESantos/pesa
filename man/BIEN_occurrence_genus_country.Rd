@@ -56,9 +56,9 @@ US FIA coordinates have been fuzzed and swapped, for more details see: https://w
 BIEN_occurrence_genus_country("Vaccinium", "Peru")}
 }
 \seealso{
-Other occurrence functions: 
-\code{\link{BIEN_occurrence_species_elev_range}()},
-\code{\link{BIEN_occurrence_species_range}()},
-\code{\link{BIEN_occurrence_state_range}()}
+Other occurrence functions:
+\code{\link[=BIEN_occurrence_species_elev_range]{BIEN_occurrence_species_elev_range()}},
+\code{\link[=BIEN_occurrence_species_range]{BIEN_occurrence_species_range()}},
+\code{\link[=BIEN_occurrence_state_range]{BIEN_occurrence_state_range()}}
 }
 \concept{occurrence functions}

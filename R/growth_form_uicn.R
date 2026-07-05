@@ -15,11 +15,10 @@
 #' growth_forms_iucn("Gorilla gorilla")
 #' }
 #'
-growth_forms_iucn <-  function (sp, key = NULL) {
+growth_forms_iucn <- function(sp, key = NULL) {
   if (is.null(key) == TRUE) {
     iucn_key <- Sys.getenv("IUCN_REDLIST_KEY")
-  }
-  else {
+  } else {
     iucn_key <- key
   }
 
@@ -27,7 +26,7 @@ growth_forms_iucn <-  function (sp, key = NULL) {
 
   dplyr::tibble(
     species = sp,
-    species_2 =   rs$name,
+    species_2 = rs$name,
     growth_form = rs$result$name
   )
 }

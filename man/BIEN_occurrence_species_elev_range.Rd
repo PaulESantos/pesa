@@ -61,9 +61,9 @@ BIEN_occurrence_species_elev_range(species = "Vaccinium floribundum",
 }
 }
 \seealso{
-Other occurrence functions: 
-\code{\link{BIEN_occurrence_genus_country}()},
-\code{\link{BIEN_occurrence_species_range}()},
-\code{\link{BIEN_occurrence_state_range}()}
+Other occurrence functions:
+\code{\link[=BIEN_occurrence_genus_country]{BIEN_occurrence_genus_country()}},
+\code{\link[=BIEN_occurrence_species_range]{BIEN_occurrence_species_range()}},
+\code{\link[=BIEN_occurrence_state_range]{BIEN_occurrence_state_range()}}
 }
 \concept{occurrence functions}

@@ -17,28 +17,30 @@
 #' print(df_result)
 #' @importFrom rlang `:=`
 #' @export
-add_repetitions_regex <- function(data, column_name, regex_pattern, n_repetitions, new_column_name) {
+add_repetitions_regex <- function(
+  data,
+  column_name,
+  regex_pattern,
+  n_repetitions,
+  new_column_name
+) {
   # Copiar el dataframe original
   df <- data
 
-  # Crear la nueva variable y establecer valores en NULL
-  df <- df |>
-    dplyr::mutate(!!new_column_name := NA_character_)
+  col_vals <- df[[column_name]]
+  new_vals <- rep(NA_character_, length(col_vals))
 
-  # Iterar sobre las filas y asignar los valores según la condición
-  for (i in seq_len(nrow(df))) {
-    if (grepl(regex_pattern, df[[column_name]][i])) {
-      for (j in 1:n_repetitions) {
-        if ((i + j) <= nrow(df)) {
-          df <- df |>
-            dplyr::mutate(!!new_column_name := dplyr::if_else(dplyr::row_number() == (i + j),
-                                                              df[[column_name]][i],
-                                                              !!dplyr::sym(new_column_name)))
-        }
-      }
+  matches <- which(grepl(regex_pattern, col_vals))
+
+  for (i in matches) {
+    if (n_repetitions > 0) {
+      target_indices <- (i + 1):min(i + n_repetitions, length(col_vals))
+      new_vals[target_indices] <- col_vals[i]
     }
   }
 
-  # Devolver el dataframe resultante
+  # Agregar la nueva variable con el vector asignado directamente
+  df[[new_column_name]] <- new_vals
+
   return(df)
 }

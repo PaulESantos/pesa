@@ -19,16 +19,19 @@
 #' BIEN_occurrence_genus_country("Vaccinium", "Peru")}
 #' @family occurrence functions
 #' @export
-BIEN_occurrence_genus_country <-function(genus,
-                                         country=NULL,
-                                         cultivated=FALSE,
-                                         new.world=NULL,
-                                         all.taxonomy=FALSE,
-                                         native.status=FALSE,
-                                         natives.only=TRUE,
-                                         observation.type=FALSE,
-                                         political.boundaries=FALSE,
-                                         collection.info=F, ...){
+BIEN_occurrence_genus_country <- function(
+  genus,
+  country = NULL,
+  cultivated = FALSE,
+  new.world = NULL,
+  all.taxonomy = FALSE,
+  native.status = FALSE,
+  natives.only = TRUE,
+  observation.type = FALSE,
+  political.boundaries = FALSE,
+  collection.info = F,
+  ...
+) {
   .is_char(genus)
   .is_char(country)
   .is_log(cultivated)
@@ -39,48 +42,55 @@ BIEN_occurrence_genus_country <-function(genus,
   .is_log(political.boundaries)
   .is_log(natives.only)
   .is_log(collection.info)
-  if(is.null(country))
-  {stop("Please supply either a country or 2-digit ISO code")}
+  if (is.null(country)) {
+    stop("Please supply either a country or 2-digit ISO code")
+  }
   #set conditions for query
 
-  cultivated_<-.cultivated_check(cultivated)
-  newworld_<-.newworld_check(new.world)
-  taxonomy_<-.taxonomy_check(all.taxonomy)
-  native_<-.native_check(native.status)
-  observation_<-.observation_check(observation.type)
-  political_<-.political_check(political.boundaries)
-  natives_<-.natives_check(natives.only)
-  collection_<-.collection_check(collection.info)
+  cultivated_ <- .cultivated_check(cultivated)
+  newworld_ <- .newworld_check(new.world)
+  taxonomy_ <- .taxonomy_check(all.taxonomy)
+  native_ <- .native_check(native.status)
+  observation_ <- .observation_check(observation.type)
+  political_ <- .political_check(political.boundaries)
+  natives_ <- .natives_check(natives.only)
+  collection_ <- .collection_check(collection.info)
 
   # set the query
   query <-
-    paste("SELECT scrubbed_genus, scrubbed_species_binomial",
-          taxonomy_$select,
-          native_$select,
-          political_$select,
-          " ,latitude, longitude,date_collected,datasource,dataset,dataowner,custodial_institution_codes,collection_code,view_full_occurrence_individual.datasource_id",
-          collection_$select,
-          cultivated_$select,
-          newworld_$select,
-          observation_$select,
-          "
+    paste(
+      "SELECT scrubbed_genus, scrubbed_species_binomial",
+      taxonomy_$select,
+      native_$select,
+      political_$select,
+      " ,latitude, longitude,date_collected,datasource,dataset,dataowner,custodial_institution_codes,collection_code,view_full_occurrence_individual.datasource_id",
+      collection_$select,
+      cultivated_$select,
+      newworld_$select,
+      observation_$select,
+      "
           FROM view_full_occurrence_individual
           WHERE scrubbed_genus in (",
-          paste(shQuote(genus,
-                        type = "sh"),
-                collapse = ', '), ")",
-          cultivated_$query,
-          newworld_$query,natives_$query,"
-          AND country in (", paste(base::shQuote(country, type = "sh"),
-                                   collapse = ', '), ")",
-          cultivated_$query,newworld_$query,natives_$query,"
+      paste(shQuote(genus, type = "sh"), collapse = ', '),
+      ")",
+      cultivated_$query,
+      newworld_$query,
+      natives_$query,
+      "
+          AND country in (",
+      paste(base::shQuote(country, type = "sh"), collapse = ', '),
+      ")",
+      cultivated_$query,
+      newworld_$query,
+      natives_$query,
+      "
             AND higher_plant_group NOT IN ('Algae','Bacteria','Fungi') AND is_geovalid = 1
             AND (georef_protocol is NULL OR georef_protocol<>'county centroid') AND (is_centroid IS NULL OR is_centroid=0)
             AND observation_type IN ('plot','specimen','literature','checklist')
-            AND scrubbed_species_binomial IS NOT NULL ;")
+            AND scrubbed_species_binomial IS NOT NULL ;"
+    )
 
   return(.BIEN_sql(query, ...))
-
 }
 
 ######################################################################
@@ -108,19 +118,21 @@ BIEN_occurrence_genus_country <-function(genus,
 #' BIEN_occurrence_species_range("Vaccinium floribundum", 3000, 3300)}
 #' @family occurrence functions
 #' @export
-BIEN_occurrence_species_range<-function(species,
-                                  elevation_min,
-                                  elevation_max,
-                                  cultivated=FALSE,
-                                  new.world=NULL,
-                                  all.taxonomy=FALSE,
-                                  native.status=FALSE,
-                                  natives.only=TRUE,
-                                  observation.type=FALSE,
-                                  political.boundaries=FALSE,
-                                  collection.info=F,
-                                  only.geovalid=T, ...){
-
+BIEN_occurrence_species_range <- function(
+  species,
+  elevation_min,
+  elevation_max,
+  cultivated = FALSE,
+  new.world = NULL,
+  all.taxonomy = FALSE,
+  native.status = FALSE,
+  natives.only = TRUE,
+  observation.type = FALSE,
+  political.boundaries = FALSE,
+  collection.info = F,
+  only.geovalid = T,
+  ...
+) {
   #Test input
   .is_log(cultivated)
   .is_log_or_null(new.world)
@@ -134,48 +146,51 @@ BIEN_occurrence_species_range<-function(species,
   .is_log(only.geovalid)
 
   #set conditions for query
-  cultivated_<-.cultivated_check(cultivated)
-  newworld_<-.newworld_check(new.world)
-  taxonomy_<-.taxonomy_check(all.taxonomy)
-  native_<-.native_check(native.status)
-  observation_<-.observation_check(observation.type)
-  political_<-.political_check(political.boundaries)
-  natives_<-.natives_check(natives.only)
-  collection_<-.collection_check(collection.info)
-  geovalid_<-.geovalid_check(only.geovalid)
-
+  cultivated_ <- .cultivated_check(cultivated)
+  newworld_ <- .newworld_check(new.world)
+  taxonomy_ <- .taxonomy_check(all.taxonomy)
+  native_ <- .native_check(native.status)
+  observation_ <- .observation_check(observation.type)
+  political_ <- .political_check(political.boundaries)
+  natives_ <- .natives_check(natives.only)
+  collection_ <- .collection_check(collection.info)
+  geovalid_ <- .geovalid_check(only.geovalid)
 
   # set the query
-  query <- paste("SELECT scrubbed_species_binomial",
-                 taxonomy_$select,
-                 native_$select,
-                 political_$select,
-                 " ,latitude, longitude, elevation_m, date_collected,
+  query <- paste(
+    "SELECT scrubbed_species_binomial",
+    taxonomy_$select,
+    native_$select,
+    political_$select,
+    " ,latitude, longitude, elevation_m, date_collected,
                  datasource,dataset,dataowner,custodial_institution_codes,collection_code,view_full_occurrence_individual.datasource_id",
-                 collection_$select,
-                 cultivated_$select,
-                 newworld_$select,
-                 observation_$select,
-                 geovalid_$select,
-                 "FROM view_full_occurrence_individual
+    collection_$select,
+    cultivated_$select,
+    newworld_$select,
+    observation_$select,
+    geovalid_$select,
+    "FROM view_full_occurrence_individual
                  WHERE scrubbed_species_binomial in (",
-                 paste(base::shQuote(species, type = "sh"),collapse = ', '),
-                 ")","
-                 AND elevation_m BETWEEN ", elevation_min," AND ",
-                 elevation_max,
-                 cultivated_$query,
-                 newworld_$query,
-                 natives_$query,
-                 observation_$query,
-                 geovalid_$query,
-                 "AND higher_plant_group NOT IN ('Algae','Bacteria','Fungi')
+    paste(base::shQuote(species, type = "sh"), collapse = ', '),
+    ")",
+    "
+                 AND elevation_m BETWEEN ",
+    elevation_min,
+    " AND ",
+    elevation_max,
+    cultivated_$query,
+    newworld_$query,
+    natives_$query,
+    observation_$query,
+    geovalid_$query,
+    "AND higher_plant_group NOT IN ('Algae','Bacteria','Fungi')
                  AND (georef_protocol is NULL OR georef_protocol<>'county centroid')
                  AND (is_centroid IS NULL OR is_centroid=0)
                  AND scrubbed_species_binomial IS NOT NULL
-                 ORDER BY scrubbed_species_binomial ;")
+                 ORDER BY scrubbed_species_binomial ;"
+  )
 
   return(.BIEN_sql(query, ...))
-
 }
 ######################################################################\
 ###########################
@@ -192,22 +207,33 @@ BIEN_occurrence_species_range<-function(species,
 #' species_list<-BIEN_list_species()}
 #' @family list functions
 #' @keywords internal
-BIEN_list_species_range<-function(country, elevation_min, elevation_max, ...){
+BIEN_list_species_range <- function(
+  country,
+  elevation_min,
+  elevation_max,
+  ...
+) {
   .is_char(country)
 
-  if(is.null(country))
-  {stop("Please supply either a country or 2-digit ISO code")}
+  if (is.null(country)) {
+    stop("Please supply either a country or 2-digit ISO code")
+  }
 
-  query <- paste("SELECT scrubbed_species_binomial, latitude, longitude, elevation_m
+  query <- paste(
+    "SELECT scrubbed_species_binomial, latitude, longitude, elevation_m
                  FROM view_full_occurrence_individual",
-                 "WHERE elevation_m BETWEEN ", elevation_min," AND ",
-                 elevation_max,"
-                 AND country in (", paste(shQuote(country, type = "sh"),
-                                   collapse = ', '), ")",
-                 ";")
+    "WHERE elevation_m BETWEEN ",
+    elevation_min,
+    " AND ",
+    elevation_max,
+    "
+                 AND country in (",
+    paste(shQuote(country, type = "sh"), collapse = ', '),
+    ")",
+    ";"
+  )
 
   return(.BIEN_sql(query, ...))
-
 }
 
 
@@ -241,20 +267,23 @@ BIEN_list_species_range<-function(country, elevation_min, elevation_max, ...){
 #' BIEN_occurrence_state_range("Peru", "Cusco", 3000, 3300)}
 #' @family occurrence functions
 #' @export
-BIEN_occurrence_state_range<-function(country=NULL,
-                                state=NULL,
-                                elevation_min,
-                                elevation_max,
-                                country.code=NULL,
-                                state.code=NULL,
-                                cultivated=FALSE,
-                                new.world=NULL,
-                                all.taxonomy=FALSE,
-                                native.status=FALSE,
-                                natives.only=TRUE,
-                                observation.type=FALSE,
-                                political.boundaries=FALSE,
-                                collection.info=F, ...){
+BIEN_occurrence_state_range <- function(
+  country = NULL,
+  state = NULL,
+  elevation_min,
+  elevation_max,
+  country.code = NULL,
+  state.code = NULL,
+  cultivated = FALSE,
+  new.world = NULL,
+  all.taxonomy = FALSE,
+  native.status = FALSE,
+  natives.only = TRUE,
+  observation.type = FALSE,
+  political.boundaries = FALSE,
+  collection.info = F,
+  ...
+) {
   .is_char(country)
   .is_char(state)
   .is_char(country.code)
@@ -269,98 +298,131 @@ BIEN_occurrence_state_range<-function(country=NULL,
   .is_log(collection.info)
 
   #set conditions for query
-  cultivated_<-.cultivated_check(cultivated)
-  newworld_<-.newworld_check(new.world)
-  taxonomy_<-.taxonomy_check(all.taxonomy)
-  native_<-.native_check(native.status)
-  observation_<-.observation_check(observation.type)
-  political_<-.political_check(political.boundaries)
-  natives_<-.natives_check(natives.only)
-  collection_<-.collection_check(collection.info)
+  cultivated_ <- .cultivated_check(cultivated)
+  newworld_ <- .newworld_check(new.world)
+  taxonomy_ <- .taxonomy_check(all.taxonomy)
+  native_ <- .native_check(native.status)
+  observation_ <- .observation_check(observation.type)
+  political_ <- .political_check(political.boundaries)
+  natives_ <- .natives_check(natives.only)
+  collection_ <- .collection_check(collection.info)
 
-  if(is.null(country.code) & is.null(state.code)){
-
+  if (is.null(country.code) & is.null(state.code)) {
     ##state where
-    if(length(country)==1){
-      sql_where <- paste(" WHERE country in (", paste(shQuote(country, type = "sh"),collapse = ', '), ")
-                         AND state_province in (", paste(shQuote(state, type = "sh"),collapse = ', '), ")
-                         AND scrubbed_species_binomial IS NOT NULL")
-    }else{
+    if (length(country) == 1) {
+      sql_where <- paste(
+        " WHERE country in (",
+        paste(shQuote(country, type = "sh"), collapse = ', '),
+        ")
+                         AND state_province in (",
+        paste(shQuote(state, type = "sh"), collapse = ', '),
+        ")
+                         AND scrubbed_species_binomial IS NOT NULL"
+      )
+    } else {
+      if (length(country) == length(state)) {
+        sql_where <- "WHERE ("
 
-      if(length(country)==length(state)){
+        for (i in 1:length(country)) {
+          condition_i <- paste(
+            "(country = ",
+            paste(shQuote(country[i], type = "sh"), collapse = ', '),
+            " AND state_province = ",
+            paste(shQuote(state[i], type = "sh"), collapse = ', '),
+            ")"
+          )
+          if (i != 1) {
+            condition_i <- paste("OR ", condition_i)
+          } #stick OR onto the condition where needed
+          sql_where <- paste(sql_where, condition_i)
+        } #for i
 
-        sql_where<-"WHERE ("
-
-        for(i in 1:length(country)){
-
-          condition_i<- paste("(country = ", paste(shQuote(country[i], type = "sh"),collapse = ', '), " AND state_province = ", paste(shQuote(state[i], type = "sh"),collapse = ', '), ")")
-          if(i!=1){condition_i<- paste("OR ",condition_i)}#stick OR onto the condition where needed
-          sql_where<-paste(sql_where,condition_i)
-
-        }#for i
-
-        sql_where<-paste(sql_where,") AND scrubbed_species_binomial IS NOT NULL")
-
-      }else{
-        stop("If supplying more than one country, the function requires a vector of countries corresponding to the vector of states")
-
+        sql_where <- paste(
+          sql_where,
+          ") AND scrubbed_species_binomial IS NOT NULL"
+        )
+      } else {
+        stop(
+          "If supplying more than one country, the function requires a vector of countries corresponding to the vector of states"
+        )
       }
-
-    }#if length(country>1)
-  }else{
-
+    } #if length(country>1)
+  } else {
     ##state where
-    if(length(country.code)==1){
-      sql_where <- paste(" WHERE country in (SELECT country FROM country WHERE iso in (", paste(shQuote(country.code, type = "sh"),collapse = ', '), "))
-                         AND state_province in (SELECT state_province_ascii FROM county_parish WHERE admin1code in (", paste(shQuote(state.code, type = "sh"),collapse = ', '), "))
-                         AND scrubbed_species_binomial IS NOT NULL")
-    }else{
+    if (length(country.code) == 1) {
+      sql_where <- paste(
+        " WHERE country in (SELECT country FROM country WHERE iso in (",
+        paste(shQuote(country.code, type = "sh"), collapse = ', '),
+        "))
+                         AND state_province in (SELECT state_province_ascii FROM county_parish WHERE admin1code in (",
+        paste(shQuote(state.code, type = "sh"), collapse = ', '),
+        "))
+                         AND scrubbed_species_binomial IS NOT NULL"
+      )
+    } else {
+      if (length(country.code) == length(state.code)) {
+        sql_where <- "WHERE ("
 
-      if(length(country.code)==length(state.code)){
+        for (i in 1:length(country.code)) {
+          condition_i <- paste(
+            "country in (SELECT country FROM country WHERE iso in (",
+            paste(shQuote(country.code[i], type = "sh"), collapse = ', '),
+            "))
+                              AND state_province in (SELECT state_province_ascii FROM county_parish WHERE admin1code in (",
+            paste(shQuote(state.code[i], type = "sh"), collapse = ', '),
+            "))"
+          )
+          if (i != 1) {
+            condition_i <- paste("OR ", condition_i)
+          } #stick OR onto the condition where needed
+          sql_where <- paste(sql_where, condition_i)
+        } #for i
 
-        sql_where<-"WHERE ("
-
-        for(i in 1:length(country.code)){
-
-          condition_i<- paste("country in (SELECT country FROM country WHERE iso in (", paste(shQuote(country.code[i], type = "sh"),collapse = ', '), "))
-                              AND state_province in (SELECT state_province_ascii FROM county_parish WHERE admin1code in (", paste(shQuote(state.code[i], type = "sh"),collapse = ', '), "))")
-          if(i!=1){condition_i<- paste("OR ",condition_i)}#stick OR onto the condition where needed
-          sql_where<-paste(sql_where,condition_i)
-
-        }#for i
-
-        sql_where<-paste(sql_where,") AND scrubbed_species_binomial IS NOT NULL")
-
-      }else{
-        stop("If supplying more than one country, the function requires a vector of countries corresponding to the vector of states")
-
+        sql_where <- paste(
+          sql_where,
+          ") AND scrubbed_species_binomial IS NOT NULL"
+        )
+      } else {
+        stop(
+          "If supplying more than one country, the function requires a vector of countries corresponding to the vector of states"
+        )
       }
-
-    }#if length(country>1)
-
+    } #if length(country>1)
   }
 
   # set the query
-  query <- paste("SELECT scrubbed_species_binomial" ,taxonomy_$select,political_$select, ", country, state_province, latitude, longitude, elevation_m, date_collected,datasource,
+  query <- paste(
+    "SELECT scrubbed_species_binomial",
+    taxonomy_$select,
+    political_$select,
+    ", country, state_province, latitude, longitude, elevation_m, date_collected,datasource,
                   dataset,dataowner,custodial_institution_codes,collection_code,view_full_occurrence_individual.datasource_id",
-                 collection_$select,cultivated_$select,newworld_$select,native_$select,observation_$select,"
+    collection_$select,
+    cultivated_$select,
+    newworld_$select,
+    native_$select,
+    observation_$select,
+    "
                  FROM view_full_occurrence_individual ",
-                 sql_where,
-                 "AND elevation_m BETWEEN ", elevation_min," AND ",
-                 elevation_max,
-                 cultivated_$query,newworld_$query,natives_$query,"
+    sql_where,
+    "AND elevation_m BETWEEN ",
+    elevation_min,
+    " AND ",
+    elevation_max,
+    cultivated_$query,
+    newworld_$query,
+    natives_$query,
+    "
                   AND higher_plant_group NOT IN ('Algae','Bacteria','Fungi') AND is_geovalid = 1
                   AND (georef_protocol is NULL OR georef_protocol<>'county centroid') AND (is_centroid IS NULL OR is_centroid=0)
                   AND observation_type IN ('plot','specimen','literature','checklist')
-                  AND scrubbed_species_binomial IS NOT NULL ;")
-
+                  AND scrubbed_species_binomial IS NOT NULL ;"
+  )
 
   return(.BIEN_sql(query, ...))
-
 }
 ######################################################################
 #####################
-
 
 #'List political divisions and associated geonames codes.
 #'
@@ -372,17 +434,25 @@ BIEN_occurrence_state_range<-function(country=NULL,
 #' BIEN_metadata_list_political_names()}
 #' @family metadata functions
 #' @keywords internal
-BIEN_metadata_list_political_names<-function(...){
-
-  query<-'SELECT country,country_iso, state_province, state_province_ascii,state_province_code AS "state_code",
+BIEN_metadata_list_political_names <- function(...) {
+  query <- 'SELECT country,country_iso, state_province, state_province_ascii,state_province_code AS "state_code",
   county_parish,county_parish_ascii,county_parish_code AS "county_code" FROM county_parish ;'
 
   .BIEN_sql(query, ...)
-
 }
 ######################################################################
 # 04-22-2021  nueva fucnion
-BIEN_list_county_paul <-function(country=NULL,state=NULL,county=NULL,country.code=NULL,state.code=NULL,county.code=NULL,cultivated=FALSE,new.world=NULL, ...){
+BIEN_list_county_paul <- function(
+  country = NULL,
+  state = NULL,
+  county = NULL,
+  country.code = NULL,
+  state.code = NULL,
+  county.code = NULL,
+  cultivated = FALSE,
+  new.world = NULL,
+  ...
+) {
   .is_char(country.code)
   .is_char(state.code)
   .is_char(county.code)
@@ -393,92 +463,127 @@ BIEN_list_county_paul <-function(country=NULL,state=NULL,county=NULL,country.cod
   .is_log_or_null(new.world)
 
   # set base query components
-  sql_select <-  paste("SELECT DISTINCT country, state_province, county, family, scrubbed_species_binomial ")
+  sql_select <- paste(
+    "SELECT DISTINCT country, state_province, county, family, scrubbed_species_binomial "
+  )
   sql_from <- paste(" FROM species_by_political_division ")
 
-  if(is.null(country.code) & is.null(state.code) & is.null(county.code)){
-
+  if (is.null(country.code) & is.null(state.code) & is.null(county.code)) {
     #sql where
-    if(length(country)==1 & length(state)==1){
-      sql_where <- paste(" WHERE country in (", paste(shQuote(country, type = "sh"),collapse = ', '), ")
-                         AND state_province in (", paste(shQuote(state, type = "sh"),collapse = ', '), ")
-                         AND county in (", paste(shQuote(county, type = "sh"),collapse = ', '), ")
-                         AND scrubbed_species_binomial IS NOT NULL")
-    }else{
+    if (length(country) == 1 & length(state) == 1) {
+      sql_where <- paste(
+        " WHERE country in (",
+        paste(shQuote(country, type = "sh"), collapse = ', '),
+        ")
+                         AND state_province in (",
+        paste(shQuote(state, type = "sh"), collapse = ', '),
+        ")
+                         AND county in (",
+        paste(shQuote(county, type = "sh"), collapse = ', '),
+        ")
+                         AND scrubbed_species_binomial IS NOT NULL"
+      )
+    } else {
+      if (
+        length(country) == length(state) & length(country) == length(county)
+      ) {
+        sql_where <- "WHERE ("
 
-      if(length(country)==length(state) & length(country)==length(county)){
+        for (i in 1:length(country)) {
+          condition_i <- paste(
+            "(country = ",
+            paste(shQuote(country[i], type = "sh"), collapse = ', '),
+            "
+                              AND state_province = ",
+            paste(shQuote(state[i], type = "sh"), collapse = ', '),
+            "
+                              AND county = ",
+            paste(shQuote(county[i], type = "sh"), collapse = ', '),
+            ")
+                              "
+          )
 
-        sql_where<-"WHERE ("
+          if (i != 1) {
+            condition_i <- paste("OR ", condition_i)
+          } #stick OR onto the condition where needed
+          sql_where <- paste(sql_where, condition_i)
+        } #for i
 
-        for(i in 1:length(country)){
-
-          condition_i<- paste("(country = ", paste(shQuote(country[i], type = "sh"),collapse = ', '), "
-                              AND state_province = ", paste(shQuote(state[i], type = "sh"),collapse = ', '), "
-                              AND county = ", paste(shQuote(county[i], type = "sh"),collapse = ', '), ")
-                              ")
-
-          if(i!=1){condition_i<- paste("OR ",condition_i)}#stick OR onto the condition where needed
-          sql_where<-paste(sql_where,condition_i)
-
-        }#for i
-
-        sql_where<-paste(sql_where,") AND scrubbed_species_binomial IS NOT NULL")
-
-      }else{
-        stop("If supplying more than one country and/or state the function requires matching vectors of countries, states and counties.")
-
+        sql_where <- paste(
+          sql_where,
+          ") AND scrubbed_species_binomial IS NOT NULL"
+        )
+      } else {
+        stop(
+          "If supplying more than one country and/or state the function requires matching vectors of countries, states and counties."
+        )
       }
-
-
-
-    }#if length(country>1)
-  }else{
-
+    } #if length(country>1)
+  } else {
     #sql where
-    if(length(country.code)==1 & length(state.code)==1){
-      sql_where <- paste(" WHERE country in (SELECT country FROM country WHERE iso in (", paste(shQuote(country.code, type = "sh"),collapse = ', '), "))
-                         AND state_province in (SELECT state_province_ascii FROM county_parish WHERE admin1code in (", paste(shQuote(state.code, type = "sh"),collapse = ', '), "))
-                         AND county in (SELECT county_parish_ascii FROM county_parish WHERE admin2code in (", paste(shQuote(county.code, type = "sh"),collapse = ', '), "))
-                         AND scrubbed_species_binomial IS NOT NULL")
-    }else{
+    if (length(country.code) == 1 & length(state.code) == 1) {
+      sql_where <- paste(
+        " WHERE country in (SELECT country FROM country WHERE iso in (",
+        paste(shQuote(country.code, type = "sh"), collapse = ', '),
+        "))
+                         AND state_province in (SELECT state_province_ascii FROM county_parish WHERE admin1code in (",
+        paste(shQuote(state.code, type = "sh"), collapse = ', '),
+        "))
+                         AND county in (SELECT county_parish_ascii FROM county_parish WHERE admin2code in (",
+        paste(shQuote(county.code, type = "sh"), collapse = ', '),
+        "))
+                         AND scrubbed_species_binomial IS NOT NULL"
+      )
+    } else {
+      if (
+        length(country) == length(state) & length(country) == length(county)
+      ) {
+        sql_where <- "WHERE ("
 
-      if(length(country)==length(state) & length(country)==length(county)){
+        for (i in 1:length(country)) {
+          condition_i <- paste(
+            "(country = (SELECT country FROM country WHERE iso in (",
+            paste(shQuote(country.code, type = "sh"), collapse = ', '),
+            "))
+                              AND state_province = (SELECT state_province_ascii FROM county_parish WHERE admin1code in (",
+            paste(shQuote(state.code, type = "sh"), collapse = ', '),
+            "))
+                              AND county = (SELECT county_parish_ascii FROM county_parish WHERE admin2code in (",
+            paste(shQuote(county.code, type = "sh"), collapse = ', '),
+            "))"
+          )
 
-        sql_where<-"WHERE ("
+          if (i != 1) {
+            condition_i <- paste("OR ", condition_i)
+          } #stick OR onto the condition where needed
+          sql_where <- paste(sql_where, condition_i)
+        } #for i
 
-        for(i in 1:length(country)){
-
-          condition_i<- paste("(country = (SELECT country FROM country WHERE iso in (", paste(shQuote(country.code, type = "sh"),collapse = ', '), "))
-                              AND state_province = (SELECT state_province_ascii FROM county_parish WHERE admin1code in (", paste(shQuote(state.code, type = "sh"),collapse = ', '), "))
-                              AND county = (SELECT county_parish_ascii FROM county_parish WHERE admin2code in (", paste(shQuote(county.code, type = "sh"),collapse = ', '), "))" )
-
-          if(i!=1){condition_i<- paste("OR ",condition_i)}#stick OR onto the condition where needed
-          sql_where<-paste(sql_where,condition_i)
-
-        }#for i
-
-        sql_where<-paste(sql_where,") AND scrubbed_species_binomial IS NOT NULL")
-
-      }else{
-        stop("If supplying more than one country and/or state the function requires matching vectors of countries, states and counties.")
-
+        sql_where <- paste(
+          sql_where,
+          ") AND scrubbed_species_binomial IS NOT NULL"
+        )
+      } else {
+        stop(
+          "If supplying more than one country and/or state the function requires matching vectors of countries, states and counties."
+        )
       }
-
-
-
-    }#if length(country>1)
-
-
+    } #if length(country>1)
   }
-
 
   sql_order_by <- paste(" ORDER BY scrubbed_species_binomial ")
 
   # adjust for optional parameters
-  if(!cultivated){
-    sql_where <- paste(sql_where, " AND (is_cultivated_observation = 0 OR is_cultivated_observation IS NULL) ")
-  }else{
-    sql_select  <- paste(sql_select, ",is_cultivated_observation,is_cultivated_in_region")
+  if (!cultivated) {
+    sql_where <- paste(
+      sql_where,
+      " AND (is_cultivated_observation = 0 OR is_cultivated_observation IS NULL) "
+    )
+  } else {
+    sql_select <- paste(
+      sql_select,
+      ",is_cultivated_observation,is_cultivated_in_region"
+    )
   }
 
   #if(!new.world){
@@ -487,21 +592,24 @@ BIEN_list_county_paul <-function(country=NULL,state=NULL,county=NULL,country.cod
   #  sql_where <- paste(sql_where, "AND is_new_world = 1 ")
   #}
 
-  newworld_<-.newworld_check(new.world)
+  newworld_ <- .newworld_check(new.world)
 
   # form the final query
-  query <- paste(sql_select,newworld_$select, sql_from, sql_where,newworld_$query, sql_order_by, " ;")
-
+  query <- paste(
+    sql_select,
+    newworld_$select,
+    sql_from,
+    sql_where,
+    newworld_$query,
+    sql_order_by,
+    " ;"
+  )
 
   ## form the final query
   #query <- paste(sql_select, sql_from, sql_where, sql_order_by, " ;")
 
   return(.BIEN_sql(query, ...))
-
 }
-
-
-
 
 
 # ---------------------------------------------------------------
@@ -531,18 +639,20 @@ BIEN_list_county_paul <-function(country=NULL,state=NULL,county=NULL,country.cod
 #' }
 #' @family occurrence functions
 #' @export
-BIEN_occurrence_species_elev_range <- function(species,
-                                               country = NULL,
-                                               cultivated = FALSE,
-                                               new.world = NULL,
-                                               all.taxonomy = FALSE,
-                                               native.status = FALSE,
-                                               natives.only = TRUE,
-                                               observation.type = FALSE,
-                                               political.boundaries = FALSE,
-                                               collection.info = FALSE,
-                                               only.geovalid = TRUE, ...) {
-
+BIEN_occurrence_species_elev_range <- function(
+  species,
+  country = NULL,
+  cultivated = FALSE,
+  new.world = NULL,
+  all.taxonomy = FALSE,
+  native.status = FALSE,
+  natives.only = TRUE,
+  observation.type = FALSE,
+  political.boundaries = FALSE,
+  collection.info = FALSE,
+  only.geovalid = TRUE,
+  ...
+) {
   # Validación de entradas
   .is_log(cultivated)
   .is_log_or_null(new.world)
@@ -567,31 +677,35 @@ BIEN_occurrence_species_elev_range <- function(species,
   geovalid_ <- .geovalid_check(only.geovalid)
 
   # Crear la consulta SQL
-  query <- paste("SELECT scrubbed_species_binomial",
-                 taxonomy_$select,
-                 native_$select,
-                 political_$select,
-                 " ,latitude, longitude, elevation_m, date_collected, datasource, dataset, dataowner, custodial_institution_codes, collection_code, view_full_occurrence_individual.datasource_id",
-                 collection_$select,
-                 cultivated_$select,
-                 newworld_$select,
-                 observation_$select,
-                 geovalid_$select,
-                 "FROM view_full_occurrence_individual
+  query <- paste(
+    "SELECT scrubbed_species_binomial",
+    taxonomy_$select,
+    native_$select,
+    political_$select,
+    " ,latitude, longitude, elevation_m, date_collected, datasource, dataset, dataowner, custodial_institution_codes, collection_code, view_full_occurrence_individual.datasource_id",
+    collection_$select,
+    cultivated_$select,
+    newworld_$select,
+    observation_$select,
+    geovalid_$select,
+    "FROM view_full_occurrence_individual
                  WHERE scrubbed_species_binomial IN (",
-                 paste(base::shQuote(species, type = "sh"), collapse = ', '),
-                 ")",
-                 "AND country IN (", paste(base::shQuote(country, type = "sh"), collapse = ', '), ")",
-                 cultivated_$query,
-                 newworld_$query,
-                 natives_$query,
-                 observation_$query,
-                 geovalid_$query,
-                 "AND higher_plant_group NOT IN ('Algae', 'Bacteria', 'Fungi')
+    paste(base::shQuote(species, type = "sh"), collapse = ', '),
+    ")",
+    "AND country IN (",
+    paste(base::shQuote(country, type = "sh"), collapse = ', '),
+    ")",
+    cultivated_$query,
+    newworld_$query,
+    natives_$query,
+    observation_$query,
+    geovalid_$query,
+    "AND higher_plant_group NOT IN ('Algae', 'Bacteria', 'Fungi')
                  AND (georef_protocol IS NULL OR georef_protocol <> 'county centroid')
                  AND (is_centroid IS NULL OR is_centroid = 0)
                  AND scrubbed_species_binomial IS NOT NULL
-                 ORDER BY scrubbed_species_binomial;")
+                 ORDER BY scrubbed_species_binomial;"
+  )
 
   # Ejecutar la consulta
   return(.BIEN_sql(query, ...))

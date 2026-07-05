@@ -41,26 +41,36 @@
   fixed8 <- gsub(" (SSP|SPP|SUBSP|SP|SP\\.|SPP\\.) ", " SUBSP. ", fixed7)
 
   # Manejar híbridos (eliminar 'X' y '\u00d7')
-  fixed9 <- gsub("(^X )|( X$)|( X )|(^\u00d7 )|( \u00d7$)|( \u00d7 )", " ", fixed8)
+  fixed9 <- gsub(
+    "(^X )|( X$)|( X )|(^\u00d7 )|( \u00d7$)|( \u00d7 )",
+    " ",
+    fixed8
+  )
   hybrids <- fixed8 == fixed9
   if (!all(hybrids)) {
     sp_hybrids <- splist[!hybrids]
-    warning(paste("The 'X' sign indicating hybrids have been removed in the",
-                  "following names before search:",
-                  paste(paste0("'", sp_hybrids, "'"), collapse = ", ")),
-            immediate. = TRUE, call. = FALSE)
+    warning(
+      paste(
+        "The 'X' sign indicating hybrids have been removed in the",
+        "following names before search:",
+        paste(paste0("'", sp_hybrids, "'"), collapse = ", ")
+      ),
+      immediate. = TRUE,
+      call. = FALSE
+    )
   }
 
   # Eliminar múltiples espacios
   fixed10 <- gsub(" +", " ", fixed9)
 
   # Eliminar símbolos no alfabéticos al inicio
-  for(j in 1:100) {
+  for (j in 1:100) {
     whichs <- which(grepl("^[^A-Z]", fixed10))
-    if(length(whichs) > 0)
+    if (length(whichs) > 0) {
       fixed10[whichs] <- gsub("^[^A-Z]", "", fixed10[whichs])
+    }
     whichs <- which(grepl("^[^A-Z]", fixed10))
-    if(length(whichs) == 0) break
+    if (length(whichs) == 0) break
   }
 
   return(fixed10)
@@ -94,27 +104,23 @@
 #' `.classify_algo()` handles the actual parsing logic per name.
 #' @keywords internal
 .splist_classify <- function(x) {
-
   x <- .names_standardize(x)
 
   ##################
-  infrasp <- c("subsp.", "ssp.", "var.", "subvar.",
-               "forma", "f.", "subf.")
+  infrasp <- c("subsp.", "ssp.", "var.", "subvar.", "forma", "f.", "subf.")
   Infrasp_cat <- toupper(infrasp)
   # Regular expression to make sure, infra code is between names
-  Infrasp_cat_reg <- paste("[[:alpha:]]",
-                           gsub("\\.",
-                                "\\\\.",
-                                Infrasp_cat),
-                           "[[:alpha:]]")
-  Infrasp_cat_reg |>  length()
+  Infrasp_cat_reg <- paste(
+    "[[:alpha:]]",
+    gsub("\\.", "\\\\.", Infrasp_cat),
+    "[[:alpha:]]"
+  )
+  Infrasp_cat_reg |> length()
   # Split names
   x_split <- strsplit(x, " ")
 
   # Aply the algorithm
-  result <- lapply(x_split,
-                   .classify_algo,
-                   Infrasp_cat_reg)
+  result <- lapply(x_split, .classify_algo, Infrasp_cat_reg)
   # Combine result list into a matrix
   result <- do.call(rbind, result)
   result <- cbind(x, result)
@@ -174,9 +180,7 @@
 #' parte del nombre infraespecífico.
 #'
 #' @keywords internal
-.classify_algo <- function(x_split_i,
-                           Infrasp_cat_reg) {
-
+.classify_algo <- function(x_split_i, Infrasp_cat_reg) {
   # Base output
   output <- character(10)
 
@@ -186,28 +190,28 @@
   # Genus and epithet
   output[1:2] <- x_split_i[1:2]
 
-
   # Check for infrataxa
   if (n > 2) {
     # Connect previous and next name to check for infras
     x_split_i_paste <- x_split_i
-    x_split_i_paste[2:n] <- paste(substr(x_split_i[1:(n - 1)], 1, 1),
-                                  x_split_i[2:n],
-                                  substr(x_split_i[3:n],1 , 1))
+    x_split_i_paste[2:n] <- paste(
+      substr(x_split_i[1:(n - 1)], 1, 1),
+      x_split_i[2:n],
+      substr(x_split_i[3:n], 1, 1)
+    )
 
-    infra_check <- sapply(as.list(Infrasp_cat_reg),
-                          function(x, y) {
-                            regexpr(x, y) == 1
-                          },
-                          x_split_i_paste)
+    infra_check <- sapply(
+      as.list(Infrasp_cat_reg),
+      function(x, y) {
+        regexpr(x, y) == 1
+      },
+      x_split_i_paste
+    )
     infra_id <- rowSums(infra_check) > 0
-
-
 
     # if there is none get only the author name
     if (!any(infra_id)) {
-      output[3] <- paste(x_split_i[3:n],
-                         collapse = " ")
+      output[3] <- paste(x_split_i[3:n], collapse = " ")
     } else {
       # If it has infra categories, get them
 
@@ -222,12 +226,11 @@
       }
       if (n > pos_1) {
         # get the author
-        output[3] <- paste(x_split_i[(pos_1 + 1):n],
-                           collapse = " ")
+        output[3] <- paste(x_split_i[(pos_1 + 1):n], collapse = " ")
       }
-      if (pos[1] > 3) { # Author names before infras
-        output[3] <- paste(x_split_i[3:(pos[1] - 1)],
-                           collapse = " ")
+      if (pos[1] > 3) {
+        # Author names before infras
+        output[3] <- paste(x_split_i[3:(pos[1] - 1)], collapse = " ")
       }
     }
   }
@@ -265,7 +268,7 @@
     "non binomial"
   )
 
-  missing_bino <- splist_class[splist_class$binomial == "non binomial",]
+  missing_bino <- splist_class[splist_class$binomial == "non binomial", ]
 
   if (length(unique(missing_bino$orig_name)) > 0) {
     message(paste0(
@@ -277,7 +280,6 @@
 
   return(splist_class)
 }
-
 
 
 # ---------------------------------------------------------------
@@ -304,31 +306,74 @@
   df$sorter <- 1:nrow(df)
 
   # Crear las nuevas columnas infraspecie e infra_rank
-  df$orig_infraspecies <- with(df, ifelse(subspecies != "", subspecies,
-                                          ifelse(variety != "", variety,
-                                                 ifelse(subvariety != "", subvariety,
-                                                        ifelse(forma != "", forma,
-                                                               ifelse(subforma != "", subforma, NA_character_))))))
+  df$orig_infraspecies <- with(
+    df,
+    ifelse(
+      subspecies != "",
+      subspecies,
+      ifelse(
+        variety != "",
+        variety,
+        ifelse(
+          subvariety != "",
+          subvariety,
+          ifelse(
+            forma != "",
+            forma,
+            ifelse(subforma != "", subforma, NA_character_)
+          )
+        )
+      )
+    )
+  )
 
-  df$infra_rank <- with(df, ifelse(subspecies != "", "SUBSP.",
-                                   ifelse(variety != "", "VAR.",
-                                          ifelse(subvariety != "", "SUBVAR.",
-                                                 ifelse(forma != "", "F.",
-                                                        ifelse(subforma != "", "SUBF.", NA_character_))))))
+  df$infra_rank <- with(
+    df,
+    ifelse(
+      subspecies != "",
+      "SUBSP.",
+      ifelse(
+        variety != "",
+        "VAR.",
+        ifelse(
+          subvariety != "",
+          "SUBVAR.",
+          ifelse(
+            forma != "",
+            "F.",
+            ifelse(subforma != "", "SUBF.", NA_character_)
+          )
+        )
+      )
+    )
+  )
 
   # Añadir la columna rank
-  df$rank <- ifelse(!is.na(df$orig_genus) & !is.na(df$orig_species) & is.na(df$orig_infraspecies), 2,
-                    ifelse(!is.na(df$orig_genus) & !is.na(df$orig_species) & !is.na(df$orig_infraspecies), 3,
-                           ifelse(is.na(df$orig_species) & is.na(df$orig_infraspecies), 1, NA)))
+  df$rank <- ifelse(
+    !is.na(df$orig_genus) &
+      !is.na(df$orig_species) &
+      is.na(df$orig_infraspecies),
+    2,
+    ifelse(
+      !is.na(df$orig_genus) &
+        !is.na(df$orig_species) &
+        !is.na(df$orig_infraspecies),
+      3,
+      ifelse(is.na(df$orig_species) & is.na(df$orig_infraspecies), 1, NA)
+    )
+  )
 
   # Reordenar las columnas para que infraspecie e infra_rank estén antes de Subspecies
-  column_order <- c( "sorter","orig_name",
-                     "orig_genus",
-                     "orig_species",
-                     "author",
-                     "orig_infraspecies",
-                     "infra_rank",
-                     "rank")#,
+  column_order <- c(
+    "sorter",
+    "orig_name",
+    "orig_genus",
+    "orig_species",
+    "author",
+    "orig_infraspecies",
+    "infra_rank",
+    "rank"
+  ) #,
   # "Subspecies", "Variety", "Subvariety",
   #"Forma", "Subforma")
 
@@ -360,7 +405,9 @@
 
   # Crear nuevas columnas
   df$orig_genus <- sapply(nombre_separado, function(x) x[1])
-  df$orig_species <- sapply(nombre_separado, function(x) ifelse(length(x) > 1, x[2], NA))
+  df$orig_species <- sapply(nombre_separado, function(x) {
+    ifelse(length(x) > 1, x[2], NA)
+  })
 
   return(df)
 }
@@ -395,14 +442,12 @@
 #'
 #' @keywords internal
 
-.splist_formated <- function(splist, col_name = var_name ){
-
-  if(is.character(splist)){
+.splist_formated <- function(splist, col_name = var_name) {
+  if (is.character(splist)) {
     splist_formated <- .splist_classify(splist) |>
       .transform_split_classify() |>
       .check_binomial()
-  }
-  else if (is.data.frame(splist)){
+  } else if (is.data.frame(splist)) {
     splist_formated <- .splist_format_df(splist, col_name = col_name) |>
       .check_binomial() |>
       dplyr::mutate(sorter = dplyr::row_number()) |>
@@ -435,20 +480,21 @@
 #' @importFrom tibble tibble
 #' @keywords internal
 get_iucn_category <- function(genus, species, api_key) {
-
-  if(is.null(api_key) == TRUE){
+  if (is.null(api_key) == TRUE) {
     api_key_iucn <- Sys.getenv("iucn_redlist_key")
     # 4. CONECTARSE A LAS APIs
     api <- iucnredlist::init_api(red_list_api_key = api_key_iucn)
-  }
-  else{
+  } else {
     api <- iucnredlist::init_api(red_list_api_key = api_key)
   }
 
   # Intentar obtener la evaluación por nombre
-  res_1 <- tryCatch({
-    iucnredlist::assessments_by_name(api, genus = genus, species = species)
-  }, error = function(e) return(NULL))
+  res_1 <- tryCatch(
+    {
+      iucnredlist::assessments_by_name(api, genus = genus, species = species)
+    },
+    error = function(e) return(NULL)
+  )
 
   if (is.null(res_1) || nrow(res_1) == 0) {
     return(tibble::tibble(category = NA, code = NA))
@@ -459,9 +505,12 @@ get_iucn_category <- function(genus, species, api_key) {
     dplyr::slice(1) |>
     dplyr::pull()
 
-  assessment_data <- tryCatch({
-    iucnredlist::assessment_data(api, assessment_id = assesssment_id)
-  }, error = function(e) return(NULL))
+  assessment_data <- tryCatch(
+    {
+      iucnredlist::assessment_data(api, assessment_id = assesssment_id)
+    },
+    error = function(e) return(NULL)
+  )
 
   if (is.null(assessment_data)) {
     return(tibble::tibble(category = NA, code = NA))
@@ -469,10 +518,12 @@ get_iucn_category <- function(genus, species, api_key) {
 
   assessment_data |>
     purrr::pluck("red_list_category") |>
-    (\(x) tibble::tibble(
-      category = x$description$en,
-      code = x$code
-    ))()
+    (\(x) {
+      tibble::tibble(
+        category = x$description$en,
+        code = x$code
+      )
+    })()
 }
 
 # ---------------------------------------------------------------
@@ -492,4 +543,3 @@ str_to_simple_cap <- function(text) {
 
   return(result)
 }
-

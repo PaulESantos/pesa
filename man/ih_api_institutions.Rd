@@ -16,6 +16,8 @@ A dataframe with the institutions for the given country.
 This function allows users to get a dataframe of institutions from The New York Botanical Index Herbariorum API.
 }
 \examples{
+\dontrun{
 ih_api_institutions("Brazil")
+}
 
 }
